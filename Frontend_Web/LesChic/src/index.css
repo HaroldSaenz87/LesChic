@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+  --color-background: #F5E6C8;  /* page background*/
+  --color-primary: #6A7FA8;     /* buttons or headings and other similar*/
+  --color-secondary: #C4873A;   /* accent, highlights*/
+  --color-accent: #D4C5A9;      /* borders and cards possibly*/
+  --color-surface: #FFFFF0;     /* panels, inputs possibly*/
+  --color-muted: #A8B5A2;       /* dividers and maybe subtle text*/
+  --font-display: "Cormorant Garamond", serif;
+}
+
+@layer components {
+  .hole-mask {
+    
+    /* svg helps so the zoom isnt trashed pixeled */
+    -webkit-mask-image: url(./assets/shapeV2.svg);
+    mask-image: url(./assets/shapeV2.svg);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    mask-position: center center;
+    -webkit-mask-size: 18vmin;
+    mask-size: 18vmin;
+    /* This inverts the mask — black area shows, hole is transparent */
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+}
+
+@layer base {
+  html{
+    scroll-behavior: smooth;
+  }
+
+  body{
+    overflow-x: hidden;
+  }
+}
