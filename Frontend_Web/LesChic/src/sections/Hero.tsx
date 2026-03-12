@@ -66,16 +66,43 @@ export const Hero = () => {
       </div>
 
       {/* ── 3. Final hero content — fades in over closet ── */}
-      <div
-        ref={heroContentRef}
-        className="absolute inset-0 z-3 flex flex-col items-center justify-start pt-[12vh] opacity-0 translate-y-6 pointer-events-none"
-      >
-        <p className="font-display text-white/65 uppercase tracking-[0.5em] mb-5 text-sm">
-          The Art of Dressing
-        </p>
-        <h1 className="font-display text-white font-light tracking-[0.14em] text-7xl">
-          LesChic
-        </h1>
+      <div ref={heroContentRef} className="absolute inset-0 z-3 flex flex-col items-center justify-start pt-[12vh] opacity-0 translate-y-6 pointer-events-none">
+        
+        <div className="pointer-events-auto w-105 max-w-[95vw] rounded-4xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] bg-black/30 backdrop-blur-2xl overflow-hidden">
+
+          <div className="flex flex-col items-center pt-9 pb-7 border-b border-white/8">
+            <p className="font-display text-white/45 uppercase tracking-[0.5em] text-[10px] mb-2">
+              The Art of Dressing
+            </p>
+            <h1 className="font-display text-white font-light tracking-[0.14em] text-5xl">
+              LesChic
+            </h1>
+          </div>
+
+          {/* Form */}
+          <div className="px-10 py-8 flex flex-col gap-3">
+            <input type="email" placeholder="Email"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-white/80 text-sm placeholder:text-white/20 outline-none focus:border-white/25 font-display tracking-wider transition" />
+            <input type="password" placeholder="Password"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-white/80 text-sm placeholder:text-white/20 outline-none focus:border-white/25 font-display tracking-wider transition" />
+
+            <button className="mt-2 w-full py-3.5 rounded-2xl text-[11px] uppercase tracking-[0.45em] font-display text-black font-semibold bg-linear-to-br from-white to-white/80 shadow-[0_4px_0px_rgba(0,0,0,0.25)] active:translate-y-1 active:shadow-none transition-all">
+              Enter
+            </button>
+
+            <p className="text-center text-white/25 text-[10px] uppercase tracking-widest font-display mt-1">
+              Forgot password?
+            </p>
+          </div>
+
+          
+        
+        </div>
+
+        
+       
+
+
       </div>
 
     </div>
