@@ -20,7 +20,7 @@ export const Hero = () => {
         trigger: containerRef.current,
         start: "top top",
         end: "+=180%",
-        scrub: 1.2,
+        scrub: 0,
         pin: true,
       },
     })
