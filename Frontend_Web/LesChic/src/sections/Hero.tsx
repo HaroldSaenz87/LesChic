@@ -61,7 +61,7 @@ export const Hero = () => {
         >
           LesChic
         </h1>
-        <p className="flex items-center justify-center font-display absolute bottom-[7vh] uppercase tracking-[0.45em] text-white/30 text-xs">
+        <p className="flex items-center justify-center font-display absolute bottom-[7vh] uppercase tracking-[0.45em] text-white/50 text-sm">
           Scroll
 
           <ChevronDown className="animate-bounce" />
@@ -80,7 +80,7 @@ export const Hero = () => {
         <div className="pointer-events-auto w-105 max-w-[95vw] rounded-4xl border border-accent/20 shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] bg-background/30 backdrop-blur-2xl overflow-hidden">
 
           <div className="flex flex-col items-center pt-9 pb-7 border-b border-accent/10">
-            <p className="font-display text-white/45 uppercase tracking-[0.5em] text-[13px] mb-2">
+            <p className="font-display text-white/65 uppercase tracking-[0.5em] text-[15px] mb-2">
               The Art of Dressing
             </p>
             <h1 className="font-display text-white font-light tracking-[0.14em] text-5xl">
@@ -97,14 +97,14 @@ export const Hero = () => {
           {/* toggling things */}
 
 
-          <div className="mx-8 mb-2 flex p-1.5 bg-white/5 rounded-full relative border border-accent/10">
+          <div className="mx-8 mb-2 flex p-1.5 bg-white/8 rounded-full relative border border-white/15 shadow-[0_2px_8px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)]">
             <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-secondary rounded-full transition-all duration-300 ease-out shadow-lg ${isRegister ? "left-[calc(50%+2px)]" : "left-1"}`}/>
 
-            <button onClick={() => setRegister(false)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${!isRegister ? "text-white" : "text-white/40 hover:text-white"}`}>
+            <button onClick={() => setRegister(false)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${!isRegister ? "text-white" : "text-white/70 hover:text-white"}`}>
               Sign In
             </button>
 
-            <button onClick={() => setRegister(true)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${isRegister ? "text-white" : "text-white/40 hover:text-white"}`}>
+            <button onClick={() => setRegister(true)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${isRegister ? "text-white" : "text-white/70 hover:text-white"}`}>
               Sign up
             </button>
 
