@@ -6,14 +6,20 @@ import { ChevronDown } from "lucide-react"
 import closetImg from "../assets/closet.jpg"
 import { Login } from "../components/Login"
 import { Signup } from "../components/Signup"
+import { Forgot } from "../components/Forgot"
+import { ForgotSent } from "../components/ForgotSent"
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
+
+type AuthView = "login" | "register" | "forgot" | "forgotSent"
 
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const introRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const heroContentRef = useRef<HTMLDivElement>(null)
+
+  const [authView, setAuthView] = useState<AuthView>("login")
 
 
   useGSAP(() => {
@@ -42,11 +48,9 @@ export const Hero = () => {
   });
 
 
-  const [isRegister, setRegister] = useState(false);
-
   useGSAP(() => {
     gsap.fromTo(".auth-form-container", {opacity: 0, y: 10}, {opacity: 1, y:0, duration: 0.7, ease: "power2.out"});
-  }, [isRegister]);
+  }, [authView]);
 
   return (
     <div ref={containerRef} className="relative h-screen w-full overflow-hidden ">
@@ -91,24 +95,33 @@ export const Hero = () => {
           {/* signin and register form basically based on the toggle */}
 
           <div className="auth-form-container">
-            {isRegister ? <Signup /> : <Login />}
+            {authView === "login" && <Login onForgot={() => setAuthView("forgot")} />}
+            {authView === "register" && <Signup />}
+            {authView === "forgot" && <Forgot onBack={() => setAuthView("login")} onSent={() => setAuthView("forgotSent")} />}
+            
+            {/* for email sending with link to reset */}
+            {authView === "forgotSent" && <ForgotSent onBack={() => setAuthView("login")} />}
           </div>
 
           {/* toggling things */}
 
+          {(authView === "login" || authView === "register") && (
 
-          <div className="mx-8 mb-2 flex p-1.5 bg-white/8 rounded-full relative border border-white/15 shadow-[0_2px_8px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)]">
-            <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-secondary rounded-full transition-all duration-300 ease-out shadow-lg ${isRegister ? "left-[calc(50%+2px)]" : "left-1"}`}/>
+            <div className="mx-8 mb-2 flex p-1.5 bg-white/8 rounded-full relative border border-white/15 shadow-[0_2px_8px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)]">
+              <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-secondary rounded-full transition-all duration-300 ease-out shadow-lg ${authView === "register" ? "left-[calc(50%+2px)]" : "left-1"}`}/>
 
-            <button onClick={() => setRegister(false)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${!isRegister ? "text-white" : "text-white/70 hover:text-white"}`}>
-              Sign In
-            </button>
+              <button onClick={() => setAuthView("login")} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${authView === "login" ? "text-white" : "text-white/70 hover:text-white"}`}>
+                Sign In
+              </button>
 
-            <button onClick={() => setRegister(true)} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${isRegister ? "text-white" : "text-white/70 hover:text-white"}`}>
-              Sign up
-            </button>
+              <button onClick={() => setAuthView("register")} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${authView === "register" ? "text-white" : "text-white/70 hover:text-white"}`}>
+                Sign up
+              </button>
 
-          </div>
+            </div>
+            
+          )}
+          
 
 
           

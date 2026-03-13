@@ -1,17 +1,17 @@
 
 
-export const Login = () =>{
+export const Login = ({onForgot}: {onForgot: () => void}) =>{
 
     return(
 
-        <form className="px-10 py-8 flex flex-col gap-3 animate-in fade-in duration-500">
+        <form className="px-10 py-8 flex flex-col gap-3">
             <input type="email" placeholder="Email" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             <input type="password" placeholder="Password" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             <button type="submit" className="mt-2 w-full py-3.5 rounded-full text-[15px] uppercase tracking-[0.45em] font-display text-white font-semibold bg-muted shadow-[0_6px_10px_rgba(0,0,0,0.25)] cursor-pointer transition-all active:translate-y-1">
                 Sign In
             </button>
             <div className="text-center">
-                <p className="inline-block text-white/50 text-[13px] uppercase tracking-widest font-display mt-1 cursor-pointer hover:text-white transition-all">
+                <p onClick={onForgot} className="inline-block text-white/50 text-[13px] uppercase tracking-widest font-display mt-1 cursor-pointer hover:text-white transition-all">
                     Forgot password?
                 </p>
             </div>

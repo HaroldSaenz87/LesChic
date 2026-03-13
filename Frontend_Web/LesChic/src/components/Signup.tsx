@@ -1,7 +1,7 @@
 
 export const Signup = () =>{
     return(
-        <form className="px-10 py-8 flex flex-col gap-3 animate-in fade-in duration-500">
+        <form className="px-10 py-8 flex flex-col gap-3">
             <div className="flex flex-col gap-3">
                 <input type="text" placeholder="First" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
                 <input type="text" placeholder="Last" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
