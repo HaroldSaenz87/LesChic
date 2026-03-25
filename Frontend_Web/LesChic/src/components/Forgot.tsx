@@ -16,7 +16,7 @@ export const Forgot = ({onBack, onSent}: {onBack: () => void; onSent: () => void
 
             <div className="flex gap-3 items-center justify-center">
 
-                <button onClick={onBack} className="flex items-center justify-center gap-3 mt-2 w-1/2 py-3.5 rounded-full text-[15px] uppercase tracking-[0.45em] font-display text-white font-semibold bg-muted shadow-[0_6px_10px_rgba(0,0,0,0.25)] cursor-pointer transition-all active:translate-y-1">
+                <button type="button" onClick={onBack} className="flex items-center justify-center gap-3 mt-2 w-1/2 py-3.5 rounded-full text-[15px] uppercase tracking-[0.45em] font-display text-white font-semibold bg-muted shadow-[0_6px_10px_rgba(0,0,0,0.25)] cursor-pointer transition-all active:translate-y-1">
                     <MoveLeft />
                     Back
                 </button>
