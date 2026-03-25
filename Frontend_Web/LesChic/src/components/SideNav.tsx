@@ -1,5 +1,5 @@
 import { Gem, LayoutDashboard, List, LogOut, Shirt, Tags } from "lucide-react"
-import { useState } from "react";
+
 import { NavLink, useNavigate } from "react-router-dom"
 
 interface NavItemProps {
