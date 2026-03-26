@@ -14,7 +14,7 @@ const NavItem = ({ icon, label, to, end }: NavItemProps) => (
         to={to} 
         end={end}
         className={({ isActive }) => `
-            flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer 
+            flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer 
             ${isActive 
                 ? 'bg-secondary/15 text-secondary border-l-2 border-secondary' 
                 : 'text-primary/80 hover:text-primary hover:bg-accent/20'}

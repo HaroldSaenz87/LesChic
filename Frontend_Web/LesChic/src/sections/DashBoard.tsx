@@ -5,7 +5,7 @@ export const DashBoard = () => {
 
     return (
 
-        <div className="min-h-screen bg-background transition-all duration-500">
+        <div className="min-h-screen bg-linear-to-br from-background via-background to-accent/40 transition-all duration-500">
 
             <div className="flex h-screen overflow-hidden">
 
