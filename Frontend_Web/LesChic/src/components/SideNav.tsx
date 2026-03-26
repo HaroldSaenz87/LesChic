@@ -71,7 +71,7 @@ export const SideNav = () =>{
                 
             </nav>
 
-            <div className="p-4 border-t border-accent/40 border-b border-accent/40">
+            <div className="p-4 border-t border-b border-accent/40">
                 <button 
                 onClick={handleLogout}
                 className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-primary/70 hover:text-red-500/70 hover:bg-red-50/60 rounded-xl transition-all duration-200 group"
