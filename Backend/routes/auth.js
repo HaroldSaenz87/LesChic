@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/User.js';
+import { jwtValidator } from '../middlewares/jwt-validator.js';
 import sendEmail from '../utils/sendEmail.js';
 import { generateJWT } from '../utils/jwt.js';
 
@@ -146,11 +147,11 @@ router.post('/login', async(req, res)=>{
         //Generate JWT
         const token = await generateJWT(user._id, user.email, "login-verification")
 
-        res.status(200).json({
+        res.json({
             ok: true,
             msg: 'login',
             uid: user._id,
-            name: user.name,
+            email: user.email,
             token
         })
 
@@ -163,12 +164,122 @@ router.post('/login', async(req, res)=>{
     }
 })
 
+router.get('/renew', jwtValidator, async(req, res)=>{
+    const { uid, email } = req
+
+    //Generate JWT
+    const token = await generateJWT(uid, email, "login-verification")
+
+    res.json({
+        ok: true,
+        uid, email,
+        token
+    })
+})
+
 router.post('/forgot-password', async(req, res)=>{
-    //TODO: send email with token to reset password
+    const { email } = req.body;
+    try {
+        // check email associated with a valid user
+        let user = await User.findOne({email});
+        if(!user || !user.isEmailVerified){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Cannot find a user with that email or email not verified'
+            })
+        }
+
+        // create a token
+        //Generate JWT
+        const emailToken = await generateJWT(user._id, user.email, "forgot-password")
+        const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${emailToken}`
+        await sendEmail({
+        to: user.email,
+        subject: "Reset password",
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2>Reset password</h2>
+            <p>Hello ${user.name},</p>
+            <p>Please click the button below to reset your password:</p>
+            <a href="${resetLink}"
+                style="display:inline-block;padding:10px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:6px;">
+                Reset Password
+            </a>
+            <p style="margin-top:16px;">Or copy and paste this link into your browser:</p>
+            <p>${resetLink}</p>
+            <p>This link will expire in 1 day.</p>
+            </div>
+        `,
+        });
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Reset password email sent.'
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error on forgot password'
+        })
+    }
 })
 
 router.post('/reset-password', async(req, res)=>{
-    //TODO: decode JWT and update password (hash)
+    // decode JWT and update password (hash)
+    const { token, password } = req.body;
+    try {
+        if (!token || !password) {
+            return res.status(400).json({
+                ok: false,
+                msg: "Verification token and password is required",
+            });
+        }
+
+        //check token
+        let decoded;
+        try {
+        decoded = jwt.verify(token, process.env.SECRET_JWT_SEED);
+        } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            msg: "Invalid or expired verification token",
+        });
+        }
+
+        if (decoded.type !== "forgot-password") {
+            return res.status(400).json({
+                ok: false,
+                msg: "Invalid token type",
+            });
+        }
+
+        const user = await User.findById(decoded.uid);
+
+        if (!user) {
+            return res.status(404).json({
+                ok: false,
+                msg: "User not found",
+            });
+        }
+
+        //update user account params
+        //HASH password
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(password, salt)
+        await user.save();
+        return res.status(200).json({
+            ok: true,
+            msg: "Password reset successfully",
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error on reset password'
+        })
+    }
 })
 
 

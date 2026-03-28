@@ -15,6 +15,13 @@ export const jwtValidator = (req, res = response, next) => {
 
         const payload = jwt.verify(token, process.env.SECRET_JWT_SEED)
 
+        if (payload.type !== "login-verification") {
+            return res.status(400).json({
+                ok: false,
+                msg: "Invalid token type",
+            });
+        }
+
         req.uid = payload.uid
         req.email = payload.email
 
