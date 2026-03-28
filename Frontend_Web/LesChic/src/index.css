@@ -39,3 +39,15 @@
     overflow-x: hidden;
   }
 }
+
+
+/* background image for use later?? maybe?? possibly?? who knows... */
+@layer utilities {
+    .bg-dashboard {
+        background-image: url("./assets/possible_Dashboard_Background6.jpg"); /* 👈 update path */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+}
