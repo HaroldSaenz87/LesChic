@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import { Hero } from "./sections/Hero"
 import { ResetPassword } from "./components/ResetPassword"
 import { DashBoard } from "./sections/DashBoard"
+import { ProtectedRoute } from "./components/ProtectedRoute"
 
 
 function App() {
@@ -12,15 +13,20 @@ function App() {
       <Route path="/" element={<Hero />} />
       <Route path="/reset-password" element={<ResetPassword />}/>
 
-      <Route path="/dashboard" element={<DashBoard />} >
+      <Route element={<ProtectedRoute />}>
+      
+        <Route path="/dashboard" element={<DashBoard />} >
 
-        <Route index element={<div>Dashboard Home Content</div>} />
+          <Route index element={<div>Dashboard Home Content</div>} />
 
-        <Route path="closet" element={<div>My Closet Content</div>} />
+          <Route path="closet" element={<div>My Closet Content</div>} />
 
-        <Route path="lookbooks" element={<div>Lookbooks Content</div>} />
+          <Route path="lookbooks" element={<div>Lookbooks Content</div>} />
+          
+          <Route path="tags" element={<div>Tags Content</div>} />
         
-        <Route path="tags" element={<div>Tags Content</div>} />
+        </Route>
+
       </Route>
 
     </Routes>

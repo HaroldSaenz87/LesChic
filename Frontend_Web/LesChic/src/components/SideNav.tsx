@@ -32,7 +32,8 @@ export const SideNav = () =>{
 
     {/* for now until proper logout */}
     const handleLogout = () => {
-        localStorage.removeItem("user_session");
+        sessionStorage.removeItem("user_data");
+        sessionStorage.clear();
         navigate("/", { replace: true});
     };
 

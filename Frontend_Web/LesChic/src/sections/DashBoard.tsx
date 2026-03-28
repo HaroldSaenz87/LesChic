@@ -1,7 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { SideNav } from "../components/SideNav";
+import { useEffect } from "react";
 
 export const DashBoard = () => {
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // If the user lands here but the data is gone, kick them out immediately
+        const isAuthenticated = sessionStorage.getItem("user_data") !== null;
+        if (!isAuthenticated) {
+            navigate("/", { replace: true });
+        }
+    }, [navigate]);
 
     return (
 
