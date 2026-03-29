@@ -35,16 +35,18 @@ export const Login = ({onForgot}: {onForgot: () => void}) =>{
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true); // Start loading immediately
+
+        // Start loading immediately
+        setIsLoading(true); 
         setMessage("");
 
         const payload = { 
-            email: email, // Backend usually expects 'login' or 'email'
+            email: email, 
             password: password 
         };
 
         try {
-            const response = await fetch(buildPath('api/login'), {
+            const response = await fetch(buildPath('api/auth/login'), {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers: { 'Content-Type': 'application/json' }
@@ -52,7 +54,7 @@ export const Login = ({onForgot}: {onForgot: () => void}) =>{
 
             const res = await response.json();
 
-            if (!res.ok) {
+            if (!response.ok) {
                 setMessage(res.msg || "Invalid credentials");
 
                 setTimeout(() => {
@@ -66,13 +68,16 @@ export const Login = ({onForgot}: {onForgot: () => void}) =>{
                     name: res.name,
                     token: res.token
                 }));
+                
                 navigate("/dashboard", { replace: true });
             }
         } catch (error) {
-            setMessage("Service unavailable. Please try again later.");
+            setMessage("Service unavailable.");
+
             setTimeout(() => {
                 setMessage("");
             }, 5000);
+
         }finally {
             setIsLoading(false); // Stop loading regardless of success or error
         }
@@ -85,7 +90,7 @@ export const Login = ({onForgot}: {onForgot: () => void}) =>{
             <input type="password" placeholder="Password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             
             {message && (
-                <span className="text-[12px] text-red-400 uppercase tracking-widest text-center animate-in fade-in zoom-in-95 duration-300">
+                <span className="text-[12px] text-red-500 font-bold uppercase tracking-widest text-center animate-in fade-in zoom-in-95 duration-300">
                     {message}
                 </span>
             )}
