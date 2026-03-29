@@ -1,4 +1,5 @@
-import express from 'express'
+import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 import { dbConnection } from './database/config.js';
@@ -10,6 +11,9 @@ const app = express();
 const port = process.env.PORT;
 
 dbConnection();
+
+//cors
+app.use(cors())
 
 //body Parse
 app.use( express.json() )
