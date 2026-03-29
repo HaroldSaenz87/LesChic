@@ -7,8 +7,11 @@ export const DashBoard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         // If the user lands here but the data is gone, kick them out immediately
         const isAuthenticated = sessionStorage.getItem("user_data") !== null;
+        
+
         if (!isAuthenticated) {
             navigate("/", { replace: true });
         }
@@ -16,16 +19,21 @@ export const DashBoard = () => {
 
     return (
 
-        <div className="min-h-screen bg-linear-to-br from-background via-background to-accent/40 transition-all duration-500">
+        // Full screen container with background image
+        <div className="min-h-screen bg-dashboard transition-all duration-500">
 
             <div className="flex h-screen overflow-hidden">
 
+                {/* Fixed left sidebar with nav links */}
                 <SideNav />
 
+                {/* Scrollable main content area and renders the active nested route */}
                 <main className="flex-1 overflow-y-auto p-8 relative">
+                    
                     <div className="max-w-7xl mx-auto">
                         <Outlet /> 
                     </div>
+                    
                 </main>
             
             </div>

@@ -1,4 +1,4 @@
-import { Gem, LayoutDashboard, List, LogOut, Shirt, Tags } from "lucide-react"
+import { Gem, LayoutDashboard, List, LogOut, Shirt, Calendar } from "lucide-react"
 
 import { NavLink, useNavigate } from "react-router-dom"
 
@@ -9,10 +9,11 @@ interface NavItemProps {
     end?: boolean
 }
 
+// Individual nav link applies active styles when the route matches
 const NavItem = ({ icon, label, to, end }: NavItemProps) => (
     <NavLink 
         to={to} 
-        end={end}
+        end={end} // end true means only match exact path, not partial
         className={({ isActive }) => `
             flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer 
             ${isActive 
@@ -30,24 +31,28 @@ export const SideNav = () =>{
     const navigate = useNavigate();
     
 
-    {/* for now until proper logout */}
+    {/* Clears session and redirects to login */}
     const handleLogout = () => {
         sessionStorage.removeItem("user_data");
         sessionStorage.clear();
         navigate("/", { replace: true});
     };
 
+    // Nav items adding a new page only requires adding an entry here
     const menuItems = [
-        { to: "/dashboard", icon: <LayoutDashboard size={20} />, label: "Dashboard", end: true },
+        { to: "/dashboard", icon: <LayoutDashboard size={20} />, label: "Overview", end: true },
         { to: "/dashboard/closet", icon: <Shirt size={20} />, label: "My Closet" },
         { to: "/dashboard/lookbooks", icon: <List size={20} />, label: "Lookbooks" },
-        { to: "/dashboard/tags", icon: <Tags size={20} />, label: "Tags" },
+        { to: "/dashboard/planner", icon: <Calendar size={20} />, label: "Planner" },
     ];
 
 
     return(
+
+        // Sidebar container
         <div className="w-64 h-full bg-surface border-r border-accent/40 flex flex-col relative z-10 shadow-[2px_0_12px_rgba(0,0,0,0.06)]">
 
+            {/* Brand logo area */}
             <div className="p-6 border-b border-accent/40">
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-xl border border-secondary/40 bg-secondary/10 flex items-center justify-center ">
@@ -58,6 +63,7 @@ export const SideNav = () =>{
                 </div>
             </div>
 
+            {/* Nav links rendered from menuItems array */}
             <nav className="flex-1 px-4 py-6 space-y-2">
                 
                 {menuItems.map((item) => (
@@ -72,6 +78,7 @@ export const SideNav = () =>{
                 
             </nav>
 
+            {/* Sign out button thats pinned at the bottom of the sidebar */}
             <div className="p-4 border-t border-b border-accent/40">
                 <button 
                 onClick={handleLogout}

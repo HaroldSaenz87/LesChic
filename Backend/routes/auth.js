@@ -151,6 +151,7 @@ router.post('/login', async(req, res)=>{
             ok: true,
             msg: 'login',
             uid: user._id,
+            name: user.name,
             email: user.email,
             token
         })

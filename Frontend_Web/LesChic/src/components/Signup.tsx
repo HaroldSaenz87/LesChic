@@ -61,10 +61,14 @@ export const Signup = () =>{
         }
     };
 
+    // Shown after successful registration — prompts user to check their email
+
     if(isSent)
     {
         return (
+
             <div className="px-10 py-8 text-center space-y-4">
+                
                 <h2 className="text-secondary font-display text-xl uppercase tracking-widest">Check Your Email</h2>
                 
                 <p className="text-white/70 text-sm leading-relaxed">
@@ -81,19 +85,27 @@ export const Signup = () =>{
 
 
     return(
+
         <form onSubmit={doSignup} className="px-10 py-8 flex flex-col gap-3">
+            
+            {/* Name fields side by side */}
             <div className="flex flex-col gap-3">
                 <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="First" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
                 <input value={lastName} onChange={(e) => setLastName(e.target.value)} type="text" placeholder="Last" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             </div>
+            
+            {/* Email and password inputs */}
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" required className="w-full bg-white/10 border border-accent/20 rounded-xl px-5 py-3 text-white text-sm placeholder:text-white/50 outline-none focus:border-white/30 tracking-wider transition" />
             
+            {/* Inline error message */}
             {message && <span className="text-[11px] text-red-500 font-bold text-center uppercase tracking-widest">{message}</span>}
             
+            {/* Submit button — disabled while request is in flight */}
             <button type="submit" disabled={isLoading} className="mt-2 w-full py-3.5 rounded-full text-[15px] uppercase tracking-[0.45em] font-display text-white font-semibold bg-muted shadow-[0_6px_10px_rgba(0,0,0,0.25)] cursor-pointer transition-all active:translate-y-1">
                 {isLoading ? "Registering..." : "Register"}
             </button>
+        
         </form>
     )
 }

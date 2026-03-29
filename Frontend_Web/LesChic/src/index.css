@@ -43,11 +43,69 @@
 
 /* background image for use later?? maybe?? possibly?? who knows... */
 @layer utilities {
-    .bg-dashboard {
-        background-image: url("./assets/possible_Dashboard_Background6.jpg"); /* 👈 update path */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
+
+  .bg-dashboard {
+      background-image: url("./assets/possible_Dashboard_Background6.jpg"); /* 👈 update path */
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      
+  }
+
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(10px);
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out both;
+  }
+
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+
+
+}
+
+@layer components{
+  .glass{
+    background-color: color-mix(in srgb, var(--color-background) 50%, transparent);
+    backdrop-filter: blur(16px);
+
+  }
 }
