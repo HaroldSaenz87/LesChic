@@ -3,12 +3,26 @@
 
 
 @theme {
-  --color-background: #F5E6C8;  /* page background*/
-  --color-primary: #6A7FA8;     /* buttons or headings and other similar*/
-  --color-secondary: #C4873A;   /* accent, highlights*/
-  --color-accent: #D4C5A9;      /* borders and cards possibly*/
-  --color-surface: #FFFFF0;     /* panels, inputs possibly*/
-  --color-muted: #A8B5A2;       /* dividers and maybe subtle text*/
+  /* Page background (Lightest) */
+  --color-background: #f9ebe7;  
+  
+  /* Buttons, Main Headings (Darkest) */
+  --color-primary: #5e4a46;    
+  
+  /* Accents, Highlights (The 'Pop' color) */
+  --color-secondary: #e8c4c4;   
+  
+  /* Borders, Cards, Subtle details */
+  --color-accent: #a18276;      
+  
+  /* Panels, Input fields */
+  --color-surface: #caa6a0;     
+  
+  /* Subtle text or dividers */
+  --color-muted: #a18276;
+
+  --color-secondary2: #C4873A;
+
   --font-display: "Cormorant Garamond", serif;
 }
 

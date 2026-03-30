@@ -83,7 +83,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
 
                 <div className="flex items-center gap-2">
 
-                    <div className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-secondary2 " />
                     
                     <p className="text-white/90 text-xs uppercase tracking-widest">{used} Used</p>
                 
@@ -91,7 +91,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
 
                 <div className="flex items-center gap-2">
                 
-                    <div className="w-2.5 h-2.5 rounded-full bg-white/90 animate-pulse" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/90 " />
                 
                     <p className="text-white/90 text-xs uppercase tracking-widest">{remaining} Remaining</p>
                 

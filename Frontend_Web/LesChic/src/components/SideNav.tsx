@@ -17,7 +17,7 @@ const NavItem = ({ icon, label, to, end }: NavItemProps) => (
         className={({ isActive }) => `
             flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer 
             ${isActive 
-                ? 'bg-secondary/15 text-secondary border-l-2 border-secondary' 
+                ? 'bg-secondary/25 text-accent border-l-4 border-primary' 
                 : 'text-primary/80 hover:text-primary hover:bg-accent/20'}
         `}
     >
@@ -56,7 +56,7 @@ export const SideNav = () =>{
             <div className="p-6 border-b border-accent/40">
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-xl border border-secondary/40 bg-secondary/10 flex items-center justify-center ">
-                        <Gem size={22} className="text-secondary" />
+                        <Gem size={25} className="text-primary" />
                     </div>
 
                     <span className="font-display font-bold text-xl tracking-widest text-primary uppercase">LesChic</span> 

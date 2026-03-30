@@ -110,11 +110,11 @@ export const Hero = () => {
             <div className="mx-8 mb-2 flex p-1.5 bg-white/8 rounded-full relative border border-white/15 shadow-[0_2px_8px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.06)]">
               <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-secondary rounded-full transition-all duration-300 ease-out shadow-lg ${authView === "register" ? "left-[calc(50%+2px)]" : "left-1"}`}/>
 
-              <button onClick={() => setAuthView("login")} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${authView === "login" ? "text-white" : "text-white/70 hover:text-white"}`}>
+              <button onClick={() => setAuthView("login")} className={`relative z-10 w-1/2 py-2 text-[13px] uppercase tracking-widest font-bold font-display transition-colors duration-300 cursor-pointer ${authView === "login" ? "text-white" : "text-white/70 hover:text-white"}`}>
                 Sign In
               </button>
 
-              <button onClick={() => setAuthView("register")} className={`relative z-10 w-1/2 py-2 text-[10px] uppercase tracking-widest font-display transition-colors duration-300 cursor-pointer ${authView === "register" ? "text-white" : "text-white/70 hover:text-white"}`}>
+              <button onClick={() => setAuthView("register")} className={`relative z-10 w-1/2 py-2 text-[13px] uppercase tracking-widest font-bold font-display transition-colors duration-300 cursor-pointer ${authView === "register" ? "text-white" : "text-white/70 hover:text-white"}`}>
                 Sign up
               </button>
 
