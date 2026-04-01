@@ -134,6 +134,10 @@ class RegisterView extends StatelessWidget{
               labelText: 'Password'
             )
         ),
+        FilledButton(
+            onPressed: () => showSnackBar(context, 'Create account pressed'),
+            child: Text('Create Account'),
+          ),
       ],
     );
   }
