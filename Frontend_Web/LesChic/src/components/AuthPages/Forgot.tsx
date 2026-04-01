@@ -1,6 +1,6 @@
 import { MoveLeft } from "lucide-react";
 import { useState } from "react";
-import { buildPath } from "../utils/buildPath";
+import { buildPath } from "../../utils/buildPath";
 
 
 export const Forgot = ({onBack, onSent}: {onBack: () => void; onSent: () => void}) =>{

@@ -1,5 +1,5 @@
 import React from "react";
-import closetImg from "../assets/closet.jpg"
+import closetImg from "../../assets/closet.jpg"
 
 // Shared background wrapper for standalone auth pages (verify email and reset password)
 export const AuthBackground = ({ children }: { children: React.ReactNode }) => {

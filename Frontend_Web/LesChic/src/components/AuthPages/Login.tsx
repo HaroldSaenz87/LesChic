@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { buildPath } from "../utils/buildPath";
+import { buildPath } from "../../utils/buildPath";
 import { useState } from "react";
 
 export const Login = ({onForgot}: {onForgot: () => void}) =>{

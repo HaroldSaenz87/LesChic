@@ -4,10 +4,10 @@ import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ChevronDown } from "lucide-react"
 import closetImg from "../assets/closet.jpg"
-import { Login } from "../components/Login"
-import { Signup } from "../components/Signup"
-import { Forgot } from "../components/Forgot"
-import { ForgotSent } from "../components/ForgotSent"
+import { Login } from "../components/AuthPages/Login"
+import { Signup } from "../components/AuthPages/Signup"
+import { Forgot } from "../components/AuthPages/Forgot"
+import { ForgotSent } from "../components/AuthPages/ForgotSent"
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
