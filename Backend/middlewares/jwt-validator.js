@@ -24,6 +24,7 @@ export const jwtValidator = (req, res = response, next) => {
 
         req.uid = payload.uid
         req.email = payload.email
+        req.name = payload.name || "Anonymous"
 
     } catch (error) {
         console.log(error);

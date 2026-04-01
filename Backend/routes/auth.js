@@ -35,7 +35,7 @@ router.post('/register', async(req, res)=>{
 
         //send email with token to verify email
         //Generate JWT
-        const emailToken = await generateJWT(user._id, user.email, "email-verification")
+        const emailToken = await generateJWT(user._id, {email: user.email}, "email-verification")
         const verificationLink = `${process.env.CLIENT_URL}/verify-email?token=${emailToken}`
         await sendEmail({
         to: user.email,
@@ -145,7 +145,7 @@ router.post('/login', async(req, res)=>{
         }
 
         //Generate JWT
-        const token = await generateJWT(user._id, user.email, "login-verification")
+        const token = await generateJWT(user._id, {email: user.email, name:user.name }, "login-verification")
 
         res.json({
             ok: true,
@@ -166,14 +166,14 @@ router.post('/login', async(req, res)=>{
 })
 
 router.get('/renew', jwtValidator, async(req, res)=>{
-    const { uid, email } = req
+    const { uid, email, name } = req
 
     //Generate JWT
-    const token = await generateJWT(uid, email, "login-verification")
+    const token = await generateJWT(uid, {email, name}, "login-verification")
 
     res.json({
         ok: true,
-        uid, email,
+        uid, email, name,
         token
     })
 })
@@ -192,7 +192,7 @@ router.post('/forgot-password', async(req, res)=>{
 
         // create a token
         //Generate JWT
-        const emailToken = await generateJWT(user._id, user.email, "forgot-password")
+        const emailToken = await generateJWT(user._id, {email: user.email}, "forgot-password")
         const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${emailToken}`
         await sendEmail({
         to: user.email,
@@ -201,12 +201,7 @@ router.post('/forgot-password', async(req, res)=>{
             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
             <h2>Reset password</h2>
             <p>Hello ${user.name},</p>
-            <p>Please click the button below to reset your password:</p>
-            <a href="${resetLink}"
-                style="display:inline-block;padding:10px 18px;background:#2563eb;color:#fff;text-decoration:none;border-radius:6px;">
-                Reset Password
-            </a>
-            <p style="margin-top:16px;">Or copy and paste this link into your browser:</p>
+            <p style="margin-top:16px;">Copy and paste or click this link into your browser:</p>
             <p>${resetLink}</p>
             <p>This link will expire in 1 day.</p>
             </div>
