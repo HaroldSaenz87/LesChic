@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 
+import 'loginPage.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
 }
 
+class App extends StatelessWidget{
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      //set the theme TODO: add color palette
+      theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(),
+        )
+      ),
+
+      //set first screen seen by user
+      home: const LoginPage()
+    );
+  }
+}
+
+//inaccessible code but left behind for easier reference
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
