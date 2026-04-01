@@ -1,3 +1,4 @@
+import 'package:closet/dashboardPage.dart';
 import 'package:flutter/material.dart';
 
 import 'loginPage.dart';
@@ -20,7 +21,10 @@ class App extends StatelessWidget{
       ),
 
       //set first screen seen by user
-      home: const LoginPage()
+      home: const LoginPage(),
+      routes:{
+        '/dashboard': (context) => const DashboardPage(),
+      }
     );
   }
 }

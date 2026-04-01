@@ -70,6 +70,12 @@ class LoginView extends StatelessWidget{
 class Login extends StatelessWidget{
   const Login ({super.key});
 
+  void loginPressed(BuildContext context){
+    showSnackBar(context, 'Login pressed');
+    Navigator.pushNamed(context, '/dashboard');
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -86,7 +92,7 @@ class Login extends StatelessWidget{
             )
           ),
           FilledButton(
-            onPressed: () => showSnackBar(context, 'Login pressed'),
+            onPressed: () => loginPressed(context),
             child: Text('Login'),
           ),
         ],
