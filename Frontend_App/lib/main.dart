@@ -7,7 +7,7 @@ void main() {
   runApp(const App());
 }
 
-class App extends StatelessWidget{
+class App extends StatelessWidget {
   const App({super.key});
 
   @override
@@ -17,7 +17,7 @@ class App extends StatelessWidget{
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),
-        )
+        ),
       ),
 
       //set first screen seen by user
