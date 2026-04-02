@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 
-class DashboardPage extends StatelessWidget{
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        destinations: const<Widget>[
+        destinations: const <Widget>[
           //overview
           NavigationDestination(
             icon: Icon(Icons.dashboard), 
-            label: 'Home'
+            label: 'Home',
           ),
 
           //my closet
           NavigationDestination(
-            icon: Icon(Icons.checkroom), //TODO: replace with shirt icon
-            label: 'My Closet'
+            icon: Icon(Icons.checkroom), //TODO: replace with a better icon
+            label: 'My Closet',
           ),
 
           //lookbooks
           NavigationDestination(
-            icon: Icon(Icons.list), //TODO: replace with shirt icon
-            label: 'Lookbooks'
+            icon: Icon(Icons.list), //TODO: replace with a better icon
+            label: 'Lookbooks',
           ),
 
           //planner
           NavigationDestination(
-            icon: Icon(Icons.calendar_month), //TODO: replace with shirt icon
-            label: 'Planner'
+            icon: Icon(Icons.calendar_month), //TODO: replace with a better icon
+            label: 'Planner',
           ),
         ],
       ),
@@ -38,10 +38,10 @@ class DashboardPage extends StatelessWidget{
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () => Navigator.pop(context), 
+          onPressed: () => Navigator.pop(context),
           child: const Text('Log out'),
-          ),
-      )
+        ),
+      ),
     );
   }
 }

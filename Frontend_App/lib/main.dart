@@ -21,10 +21,10 @@ class App extends StatelessWidget {
       ),
 
       //set first screen seen by user
-      home: const LoginPage(),
-      routes:{
+      routes: {
+        '/': (context) => const LoginPage(),
         '/dashboard': (context) => const DashboardPage(),
-      }
+      },
     );
   }
 }
