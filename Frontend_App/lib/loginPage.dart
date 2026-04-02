@@ -119,33 +119,73 @@ class RegisterView extends StatefulWidget{
 class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _regFormKey = GlobalKey<FormState>();
 
+  void registerPressed()
+  {
+    if (_regFormKey.currentState!.validate()){
+      showSnackBar(context, 'Create account pressed (with valid input)');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _regFormKey,
       child: Column(
         children: <Widget>[
-          TextField(
+          //first name field
+          TextFormField(
             decoration: InputDecoration(
               labelText: 'First',
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your first name';
+              }
+              return null;
+            },
           ),
-          TextField(
+
+          //last name field
+          TextFormField(
             decoration: InputDecoration(
               labelText: 'Last',
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your last name';
+              }
+              return null;
+            },
           ),
-          TextField(
+
+          //email field
+          TextFormField(
             decoration: InputDecoration(
               labelText: 'Email',
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              return null;
+            },
           ),
-          TextField(
+
+          //password field
+          TextFormField(
             obscureText: true,
             decoration: InputDecoration(labelText: 'Password'),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+              }
+              return null;
+            },
           ),
+
+          //register button
           FilledButton(
-            onPressed: () => showSnackBar(context, 'Create account pressed'),
+            onPressed: () => registerPressed(),
             child: Text('Create Account'),
           ),
         ],
