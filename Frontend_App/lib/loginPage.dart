@@ -117,35 +117,39 @@ class RegisterView extends StatefulWidget{
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final GlobalKey<FormState> _regFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'First',
+    return Form(
+      key: _regFormKey,
+      child: Column(
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'First',
+            ),
           ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Last',
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Last',
+            ),
           ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Email',
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Email',
+            ),
           ),
-        ),
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(labelText: 'Password'),
-        ),
-        FilledButton(
-          onPressed: () => showSnackBar(context, 'Create account pressed'),
-          child: Text('Create Account'),
-        ),
-      ],
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(labelText: 'Password'),
+          ),
+          FilledButton(
+            onPressed: () => showSnackBar(context, 'Create account pressed'),
+            child: Text('Create Account'),
+          ),
+        ],
+      ),
     );
   }
 }
