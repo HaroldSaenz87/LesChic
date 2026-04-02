@@ -135,6 +135,7 @@ class _RegisterViewState extends State<RegisterView> {
           //first name field
           TextFormField(
             decoration: InputDecoration(
+              icon: Icon(Icons.person),
               labelText: 'First',
             ),
             validator: (String? value) {
@@ -148,6 +149,7 @@ class _RegisterViewState extends State<RegisterView> {
           //last name field
           TextFormField(
             decoration: InputDecoration(
+              icon: Icon(null),
               labelText: 'Last',
             ),
             validator: (String? value) {
@@ -161,6 +163,7 @@ class _RegisterViewState extends State<RegisterView> {
           //email field
           TextFormField(
             decoration: InputDecoration(
+              icon: Icon(Icons.email),
               labelText: 'Email',
             ),
             validator: (String? value) {
@@ -174,7 +177,10 @@ class _RegisterViewState extends State<RegisterView> {
           //password field
           TextFormField(
             obscureText: true,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: InputDecoration(
+              icon: Icon(Icons.password),
+              labelText: 'Password',
+            ),
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a password';
