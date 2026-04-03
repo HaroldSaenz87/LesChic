@@ -17,7 +17,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
     ];
 
     
-    const COLORS = ["#C4873A", "#ffffff55"]; // secondary gold + subtle white
+    const COLORS = ["#e8c4c4", "#ffffff55"]; // secondary gold + subtle white
 
     // Avoid division by zero if planned is 0
     const percentage = planned > 0 ? Math.round((used / planned) * 100) : 0;
@@ -36,6 +36,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
+                            isAnimationActive={false}
                             data={data}
                             cx="50%"
                             cy="50%"
@@ -83,7 +84,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
 
                 <div className="flex items-center gap-2">
 
-                    <div className="w-2.5 h-2.5 rounded-full bg-secondary2 " />
+                    <div className="w-2.5 h-2.5 rounded-full bg-secondary " />
                     
                     <p className="text-white/90 text-xs uppercase tracking-widest">{used} Used</p>
                 

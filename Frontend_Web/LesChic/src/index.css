@@ -59,7 +59,7 @@
 @layer utilities {
 
   .bg-dashboard {
-      background-image: url("./assets/possible_Dashboard_Background6.jpg"); /* 👈 update path */
+      background-image: url("./assets/blurImage.jpg"); /*image path */
       background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;

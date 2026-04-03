@@ -17,7 +17,7 @@ const NavItem = ({ icon, label, to, end }: NavItemProps) => (
         className={({ isActive }) => `
             flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer 
             ${isActive 
-                ? 'bg-secondary/25 text-accent border-l-4 border-primary' 
+                ? 'bg-accent/25 text-primary/70 border-l-4 border-primary' 
                 : 'text-primary/80 hover:text-primary hover:bg-accent/20'}
         `}
     >
@@ -50,7 +50,7 @@ export const SideNav = () =>{
     return(
 
         // Sidebar container
-        <div className="w-64 h-full bg-surface border-r border-accent/40 flex flex-col relative z-10 shadow-[2px_0_12px_rgba(0,0,0,0.06)]">
+        <div className="w-64 h-full bg-secondary border-r border-accent/40 flex flex-col relative z-10 shadow-[2px_0_12px_rgba(0,0,0,0.06)]">
 
             {/* Brand logo area */}
             <div className="p-6 border-b border-accent/40">
