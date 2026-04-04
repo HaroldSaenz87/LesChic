@@ -36,8 +36,15 @@ const ClothesSchema = Schema({
     },
     tags: [{
         type: Schema.Types.ObjectId,
-        ref: 'Tags'
+        ref: 'Tag'
     }]
+});
+
+ClothesSchema.method('toJSON', function(){
+    const {__v, _id, ...object} = this.toObject()
+    object.id = _id
+
+    return object
 });
 
 export default model('Clothes', ClothesSchema);
