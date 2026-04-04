@@ -35,4 +35,21 @@ router.post('/', async(req, res)=>{
     }
 })
 
+router.get('/', async(req, res)=>{
+    try {
+        const { uid } = req
+        const clothes = await Clothes.find({ userId: uid })
+        res.json({
+            ok: true,
+            clothes
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error while retrieving clothes'
+        })
+    }
+})
+
 export default router;

@@ -6,11 +6,6 @@ const ClothesSchema = Schema({
         ref: 'User',
         required: true
     },
-    // categoryId: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Category',
-    //     required: false
-    // },
     title: {
         type: String,
         required: true
