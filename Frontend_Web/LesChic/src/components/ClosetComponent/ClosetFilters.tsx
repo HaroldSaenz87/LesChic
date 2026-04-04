@@ -1,28 +1,28 @@
 import { Search, ChevronDown, Check } from "lucide-react";
 import { useState } from "react";
 
-interface Category {
-    _id: string | number;
-    title: string;
-}
 
 interface ClosetFiltersProps {
     searchQuery: string;
     setSearchQuery: (val: string) => void;
-    categories: Category[];
-    selectedCat: (string | number)[];
-    onToggleCategory: (id: string | number) => void;
+
+    categories: string[];
+    selectedCat: string[];
+    onToggleCategory: (type: string) => void;
+
     brands: string[];
     selectedBrands: string[];
     onToggleBrand: (brand: string) => void;
+
     tags: string[];
     selectedTags: string[];
     onToggleTag: (tag: string) => void;
+
     onReset: () => void;
 }
 
 // Reusable Dropdown Component
-const FilterDropdown = ({ label, options, selected, onToggle, isOpen, onOpen }: any) => (
+const FilterDropdown = ({ label, options, selected, onToggle, isOpen, onOpen }: {label: string, options: string[], selected: string[], onToggle: (val: string) => void, isOpen: boolean, onOpen: () => void}) => (
     <div className="relative w-full md:w-44">
         <button 
             onClick={onOpen}
@@ -36,19 +36,17 @@ const FilterDropdown = ({ label, options, selected, onToggle, isOpen, onOpen }: 
 
         {isOpen && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-[#121212] border border-white/10 rounded-xl shadow-2xl z-50 py-2 backdrop-blur-xl max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-1">
-                {options.map((opt: any) => {
-                    // Logic to handle both Category objects and simple strings
-                    const id = typeof opt === 'object' ? opt._id : opt;
-                    const display = typeof opt === 'object' ? opt.title : opt;
-                    const isSelected = selected.includes(id);
+                {options.map((opt) => {
+                    
+                    const isSelected = selected.includes(opt);
                     
                     return (
-                        <label key={id} className="flex items-center gap-3 px-4 py-2 hover:bg-white/10 cursor-pointer transition-colors">
-                            <input type="checkbox" className="hidden" checked={isSelected} onChange={() => onToggle(id)} />
+                        <label key={opt} className="flex items-center gap-3 px-4 py-2 hover:bg-white/10 cursor-pointer transition-colors">
+                            <input type="checkbox" className="hidden" checked={isSelected} onChange={() => onToggle(opt)} />
                             <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition-all ${isSelected ? 'bg-white border-white' : 'border-white/40'}`}>
                                 {isSelected && <Check size={10} className="text-black" strokeWidth={4} />}
                             </div>
-                            <span className="text-white/70 text-[10px] uppercase tracking-[0.2em] font-bold">{display}</span>
+                            <span className="text-white/70 text-[10px] uppercase tracking-[0.2em] font-bold">{opt}</span>
                         </label>
                     );
                 })}
@@ -87,7 +85,7 @@ export const ClosetFilters = ({
             {/* Filter Group */}
             <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-start md:justify-end">
                 <FilterDropdown 
-                    label="Category" options={categories} selected={selectedCat} 
+                    label="Type" options={categories} selected={selectedCat} 
                     onToggle={onToggleCategory} isOpen={activeDropdown === 'category'} 
                     onOpen={() => toggleDropdown('category')} 
                 />

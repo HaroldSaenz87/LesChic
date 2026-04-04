@@ -1,44 +1,45 @@
 import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react";
 import { buildPath } from "../utils/buildPath";
-import { MOCK_CATEGORIES, MOCK_CLOTHES } from "../data/mock"; // mock later delete when api done
+
 import { ClosetFilters } from "../components/ClosetComponent/ClosetFilters";
 import { ClosetRow } from "../components/ClosetComponent/ClosetRow";
 
-interface Category {
-    _id: string | number;
+interface Tag {
+    _id: string;
     title: string;
-    color: string;
 }
 
 interface ClothingItem {
-    _id: string | number;
-    categoryId: string | number;
+    _id: string;
     title: string;
     brand: string;
-    size: string | number;
+    size: string;
     type: string;
-    tags: string[];
+    palette: string;
+    lastUsed: string | Date;
     imagePath: string;
+    tags: Tag[];
 }
 
 export const MyCloset = () => {
 
     // 1. State Management
-    const [clothes, setClothes] = useState<ClothingItem[]>(MOCK_CLOTHES);
-    const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
+    const [clothes, setClothes] = useState<ClothingItem[]>([]);
+    
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("User");
 
     // 2. Filter & Search State
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCat, setCat] = useState<(string | number)[]>([]);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const uniqueBrands = Array.from(new Set(clothes.map(item => item.brand))).filter(Boolean);
-    const uniqueTags = Array.from(new Set(clothes.flatMap(item => item.tags || []))).filter(Boolean);
+    const uniqueTypes = Array.from(new Set(clothes.map(item => item.type))).sort();
+    const uniqueBrands = Array.from(new Set(clothes.map(item => item.brand))).filter(Boolean).sort();
+    const uniqueTags = Array.from(new Set(clothes.flatMap(item => item.tags?.map(t => t.title) || []))).sort();
 
     // 3. Logic: Filtering
     const filteredClothes = clothes.filter((item) => {
@@ -46,23 +47,23 @@ export const MyCloset = () => {
         const searchLower = searchQuery.toLowerCase();
 
         const matchesSearch = 
+
             item.title.toLowerCase().includes(searchLower) || 
             item.brand.toLowerCase().includes(searchLower) || 
             item.type.toLowerCase().includes(searchLower) ||
-            item.tags.some(tag => tag.toLowerCase().includes(searchLower));
+            (item.tags || []).some(tag => tag?.title?.toLowerCase().includes(searchLower));
 
-        const matchesCategory = selectedCat.length === 0 || selectedCat.includes(item.categoryId);
-
+        const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type);
         const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
-        const matchesTag = selectedTags.length === 0 || item.tags.some(tag => selectedTags.includes(tag));
+        const matchesTag = selectedTags.length === 0 || (item.tags || []).some(tag => tag?.title && selectedTags.includes(tag.title));
 
-        return matchesSearch && matchesCategory && matchesBrand && matchesTag;
+        return matchesSearch && matchesType && matchesBrand && matchesTag;
     });
 
-    const toggleCategory = (id: string | number) => {
+    const toggleType = (type: string) => {
 
-        setCat(prev => 
-            prev.includes(id) ? prev.filter(catId => catId !== id) : [...prev, id]
+        setSelectedTypes(prev => 
+            prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
         );
     };
 
@@ -88,12 +89,15 @@ export const MyCloset = () => {
     useEffect(() => {
 
         const storedUser = sessionStorage.getItem("user_data");
+        let token = "";
 
         if (storedUser) {
 
             try {
                 const userData = JSON.parse(storedUser);
                 setUserName(userData.name || "User");
+                token = userData.token;
+
             } catch (error) {
                 console.error("Error parsing user data", error);
             }
@@ -102,25 +106,36 @@ export const MyCloset = () => {
 
         const fetchCloset = async () => {
 
-            try {
-                const [clothesRes, categoriesRes] = await Promise.all([
-                    fetch(buildPath('api/clothes/my-closet')),
-                    fetch(buildPath('api/categories'))
-                ]);
-                const clothesdata = await clothesRes.json();
-                const catData = await categoriesRes.json();
+            if(!token){
+                setLoading(false);
+                return;
+            }
 
-                if (clothesdata.ok) setClothes(clothesdata.clothes);
-                if (catData.ok) setCategories(catData.categories);
+            try {
+                const res = await fetch(buildPath('api/clothes'), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-token': token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (data.ok){
+                    setClothes(data.clothes);
+                }
+                else{
+                    console.error("API Error:", data.msg);
+                }
+
             } catch (error) {
-                console.error("Closet fetch error:", error);
+                console.error("Fetch error:", error);
             } finally {
                 setLoading(false);
             }
-
         };
-
-        fetchCloset();
+        fetchCloset()
 
     }, []);
 
@@ -153,34 +168,34 @@ export const MyCloset = () => {
                 <ClosetFilters 
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
-                    categories={categories}
-                    selectedCat={selectedCat}
-                    onToggleCategory={toggleCategory}
+                    categories={uniqueTypes}
+                    selectedCat={selectedTypes}
+                    onToggleCategory={toggleType}
                     brands={uniqueBrands}
                     selectedBrands={selectedBrands}
                     onToggleBrand={toggleBrand}
                     tags={uniqueTags}
                     selectedTags={selectedTags}
                     onToggleTag={toggleTag}
-                    onReset={() => {setCat([]); setSelectedBrands([]); setSelectedTags([])}}
+                    onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([])}}
     
                 />
 
                 {/* Sub-Component: Collection Rows */}
                 <div className="mt-4">
-                    {categories.length > 0 ? (
-                        categories.map((cat) => {
-                            const categoryItems = filteredClothes.filter(
-                                item => String(item.categoryId) === String(cat._id)
+                    {clothes.length > 0 ? (
+                        uniqueTypes.map((type) => {
+                            const typeItems = filteredClothes.filter(
+                                item => item.type === type
                             );
                             
-                            if (categoryItems.length === 0) return null;
+                            if (typeItems.length === 0) return null;
 
                             return (
                                 <ClosetRow 
-                                    key={cat._id} 
-                                    title={cat.title} 
-                                    items={categoryItems} 
+                                    key={type} 
+                                    title={type} 
+                                    items={typeItems} 
                                 />
                             );
                         })
