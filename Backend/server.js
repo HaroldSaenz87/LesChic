@@ -20,6 +20,9 @@ app.use(cors())
 //body Parse
 app.use( express.json() )
 
+// Serve uploaded images
+app.use("/images", express.static("public/images"));
+
 //Endpoints
 app.use('/api/auth', authRoutes)
 app.use('/api/clothes', clothesRoutes)

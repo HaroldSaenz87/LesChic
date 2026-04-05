@@ -10,7 +10,7 @@ import { jwtValidator } from '../middlewares/jwt-validator.js';
 
 const router = Router();
 
-//middleware for all events
+//middleware for all tags
 router.use(jwtValidator)
 
 // create a single tag

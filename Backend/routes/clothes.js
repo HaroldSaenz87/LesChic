@@ -6,22 +6,26 @@ import { Router } from 'express';
 
 import Clothes from '../models/Clothes.js';
 import { jwtValidator } from '../middlewares/jwt-validator.js';
+import { uploadImage } from '../utils/uploadImage.js';
+import { deleteImage } from '../utils/deleteImage.js';
 
 const router = Router();
 
-//middleware for all events
+//middleware for all clothes
 router.use(jwtValidator)
 
 // insert new item
-router.post('/', async(req, res)=>{
-
-    const clothes = new Clothes(req.body)
-
-    //TODO: upload image and generate path
+router.post('/', uploadImage.single("image"), async(req, res)=>{
 
     try {
+        const clothes = new Clothes({...req.body, lastUsed: new Date()})
+        // get image path
+        const imagePath = req.file ? `/images/${req.file.filename}` : "/images/default.jpg";
+        // update values
         clothes.userId = req.uid
+        clothes.imagePath = imagePath
         const newClothes = await clothes.save()
+        await newClothes.populate("tags", "title");
 
         res.json({
             ok: true,
@@ -129,15 +133,16 @@ router.delete("/:id", async (req, res) => {
         });
 
         if (!deleted) {
-        return res.status(404).json({
-            ok: false,
-            msg: "Clothes item not found"
-        });
+            return res.status(404).json({
+                ok: false,
+                msg: "Clothes item not found"
+            });
         }
 
-        // TODO: delete referenced image
+        // delete referenced image
+        deleteImage(deleted.imagePath);
 
-        // FUTURE IMPLEMENT
+        // FIXME: FUTURE IMPLEMENT
         // Make sure to update existing lists
 
         res.json({
