@@ -25,6 +25,7 @@ interface ClothingItem {
 }
 
 export const MyCloset = () => {
+    
     // State Management
     const [clothes, setClothes] = useState<ClothingItem[]>([]);
     const [userTags, setUserTags] = useState<Tag[]>([]);
@@ -130,7 +131,7 @@ export const MyCloset = () => {
     }, [fetchAllTags]);
 
     const handleUpdate = async (id: string, updatedData: Partial<ClothingItem>) => {
-        // 1. Prepare UI Data
+        // Prepare Data
         const uiData = { ...updatedData };
         
         if (updatedData.tags && Array.isArray(updatedData.tags)) {
@@ -138,7 +139,7 @@ export const MyCloset = () => {
             const isStringArray = typeof updatedData.tags[0] === 'string';
 
             if (isStringArray) {
-                // If they are IDs, filter from the global list to get full objects for the UI
+                // If they are IDs
                 const tagIds = updatedData.tags as unknown as string[];
                 uiData.tags = userTags.filter(t => tagIds.includes(t.id || t._id));
             } else {
@@ -147,12 +148,12 @@ export const MyCloset = () => {
             }
         }
 
-        // 2. Update Local State
+        // Update Local State
         setClothes(prev => prev.map(item => 
             (item.id === id || item._id === id) ? { ...item, ...uiData as ClothingItem } : item
         ));
 
-        // 3. Prepare API Data (The server usually only wants the IDs)
+        // Prepare API Data
         const apiData = {
             ...updatedData,
             tags: updatedData.tags?.map(t => (typeof t === 'string' ? t : (t.id || t._id)))

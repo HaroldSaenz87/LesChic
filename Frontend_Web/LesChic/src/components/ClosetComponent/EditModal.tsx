@@ -1,5 +1,5 @@
 import { X, Save, Tag as TagIcon, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { buildPath } from "../../utils/buildPath";
 
@@ -60,6 +60,8 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
             prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
         );
     };
+
+    // Handle tags
 
     const handleCreateTag = async () => {
         const trimmedTitle = newTagTitle.trim();
@@ -136,7 +138,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                     {/* Left: Image Sidebar */}
                     <div className="relative md:w-2/5 h-56 md:h-auto bg-black/40 shrink-0">
                         <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover opacity-80" />
-                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/60 to-transparent" />
                         <div className="absolute bottom-4 left-4">
                             <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-white/70 bg-black/50 px-2 py-1 rounded-md border border-white/15 backdrop-blur-sm">
                                 {type || item.type}
@@ -145,7 +147,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                     </div>
 
                     {/* Right: Form Content */}
-                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-[600px]">
+                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-150">
                         <div className="mb-6">
                             <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/30 mb-1">Editing Item</p>
                             <h2 className="text-white text-xl font-bold uppercase tracking-widest truncate">{title || item.title}</h2>
