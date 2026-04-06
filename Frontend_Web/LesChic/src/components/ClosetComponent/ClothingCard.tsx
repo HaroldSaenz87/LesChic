@@ -26,9 +26,10 @@ interface ClothingCardProps {
     allTags?: Tag[];                                              // pass your full tag list from the parent
     onSave?: (id: string, data: Partial<ClothingItem>) => Promise<void>;
     onDelete?: (id: string) => void;
+    onTagCreated: () => Promise<void>;
 }
 
-export const ClothingCard = ({ item, allTags = [], onSave, onDelete }: ClothingCardProps) => {
+export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreated }: ClothingCardProps) => {
     
     const [showMenu, setShowMenu] = useState(false);
 
@@ -163,6 +164,7 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete }: ClothingC
                         allTags={allTags}
                         onClose={() => setShowEditModal(false)}
                         onSave={handleSave}
+                        onTagCreated={onTagCreated}
                     />
                 )
             }

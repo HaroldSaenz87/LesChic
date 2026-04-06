@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Loader2 } from "lucide-react";
 import { buildPath } from "../utils/buildPath";
 
@@ -25,92 +25,70 @@ interface ClothingItem {
 }
 
 export const MyCloset = () => {
-
+    // State Management
     const [clothes, setClothes] = useState<ClothingItem[]>([]);
-    const [allUserTags, setAllUserTags] = useState<Tag[]>([]);
-
+    const [userTags, setUserTags] = useState<Tag[]>([]);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("User");
 
+    // Filter & Search State
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    const uniqueTypes = Array.from(new Set(clothes.map(item => item.type))).sort();
-    const uniqueBrands = Array.from(new Set(clothes.map(item => item.brand))).filter(Boolean).sort();
+    // 1. Define fetchAllTags FIRST so it is available to the rest of the component
+    const fetchAllTags = useCallback(async () => {
+        const storedUser = sessionStorage.getItem("user_data");
+        const token = storedUser ? JSON.parse(storedUser).token : "";
+        
+        if (!token) return;
 
-    // Use allUserTags for the filter dropdown — shows ALL user tags, not just ones on items
-    const uniqueTags = allUserTags.map(t => t.title).sort();
-
-    const filteredClothes = clothes.filter((item) => {
-        const searchLower = searchQuery.toLowerCase();
-        const matchesSearch =
-            item.title.toLowerCase().includes(searchLower) ||
-            item.brand.toLowerCase().includes(searchLower) ||
-            item.type.toLowerCase().includes(searchLower) ||
-            item.tags?.some(tag => tag.title.toLowerCase().includes(searchLower));
-        const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type);
-        const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
-        const matchesTag = selectedTags.length === 0 || item.tags?.some(tag => selectedTags.includes(tag.title));
-        return matchesSearch && matchesType && matchesBrand && matchesTag;
-    });
-
-    const toggleType = (type: string) =>
-        setSelectedTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
-
-    const toggleBrand = (brand: string) =>
-        setSelectedBrands(prev => prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]);
-
-    const toggleTag = (tag: string) =>
-        setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
-
-    const getToken = (): string => {
-        try {
-            const stored = sessionStorage.getItem("user_data");
-            return stored ? JSON.parse(stored).token : "";
-        } catch {
-            return "";
-        }
-    };
-
-    const fetchCloset = async (token: string) => {
-        try {
-            const res = await fetch(buildPath('api/clothes'), {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json', 'x-token': token }
-            });
-            const data = await res.json();
-            if (data.ok) setClothes(data.clothes);
-            else console.error("API Error:", data.msg);
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
-    };
-
-    const fetchAllTags = async (token: string) => {
         try {
             const res = await fetch(buildPath('api/tags'), {
                 headers: { 'x-token': token }
             });
             const data = await res.json();
-            if (data.ok) {
-                // Normalize: Tag.js has a broken toObject transform that strips _id
-                // So we use .lean()-style workaround: stringify then parse to get plain _id string
-                const normalized: Tag[] = data.tags.map((t: any) => {
-                    // The tag comes back as { userId, title } with _id stripped by the broken transform
-                    // BUT JSON.stringify of a Mongoose doc calls toJSON, which should set id = _id
-                    // If id is still missing, fall back to stringifying the raw object
-                    const id = t.id || t._id?.toString() || "";
-                    return { ...t, id, _id: id };
-                });
-                setAllUserTags(normalized);
-            }
+            if (data.ok) setUserTags(data.tags);
         } catch (error) {
-            console.error("Error fetching tags:", error);
+            console.error("Error refreshing tags:", error);
         }
+    }, []);
+
+    const uniqueTypes = Array.from(new Set(clothes.map(item => item.type))).sort();
+    const uniqueBrands = Array.from(new Set(clothes.map(item => item.brand))).filter(Boolean).sort();
+    const uniqueTags = userTags.map(tag => tag.title);
+
+    // Logic: Filtering
+    const filteredClothes = clothes.filter((item) => {
+        const searchLower = searchQuery.toLowerCase();
+        const matchesSearch = 
+            item.title.toLowerCase().includes(searchLower) || 
+            item.brand.toLowerCase().includes(searchLower) || 
+            item.type.toLowerCase().includes(searchLower) ||
+            item.tags?.some(tag => tag.title.toLowerCase().includes(searchLower));
+
+        const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type);
+        const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
+        const matchesTag = selectedTags.length === 0 || item.tags?.some(tag => selectedTags.includes(tag.title));
+
+        return matchesSearch && matchesType && matchesBrand && matchesTag;
+    });
+
+    // Event Handlers
+    const toggleType = (type: string) => {
+        setSelectedTypes(prev => prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]);
     };
 
+    const toggleBrand = (brand: string) => {
+        setSelectedBrands(prev => prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]);
+    };
+
+    const toggleTag = (tag: string) => {
+        setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+    };
+
+    // Data Fetching
     useEffect(() => {
         const storedUser = sessionStorage.getItem("user_data");
         let token = "";
@@ -125,71 +103,76 @@ export const MyCloset = () => {
             }
         }
 
-        const init = async () => {
-            if (!token) { setLoading(false); return; }
-            await Promise.all([fetchCloset(token), fetchAllTags(token)]);
-            setLoading(false);
+        const fetchInitialData = async () => {
+            if(!token){
+                setLoading(false);
+                return;
+            }
+            
+            try {
+                const response = await fetch(buildPath('api/clothes'), {
+                    headers: { 'x-token': token }
+                });
+                const data = await response.json();
+                if (data.ok) setClothes(data.clothes);
+
+                // Re-use the tag fetcher
+                await fetchAllTags();
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        init();
-    }, []);
-
-    // Tags already on clothes items (for the edit modal — these have proper id from populate)
-    const allTagObjects = Array.from(
-        new Map(
-            clothes.flatMap(item => item.tags || []).map(tag => [tag.id || tag._id, tag])
-        ).values()
-    );
-
-    // Merge: allTagObjects (have real IDs from populate) + allUserTags (may lack IDs due to backend bug)
-    // Prefer allTagObjects entries since they come from populate and have proper IDs
-    const mergedTagsMap = new Map<string, Tag>();
-    allTagObjects.forEach(t => mergedTagsMap.set(t.title, t));
-    allUserTags.forEach(t => {
-        if (!mergedTagsMap.has(t.title)) mergedTagsMap.set(t.title, t);
-    });
-    const mergedTags = Array.from(mergedTagsMap.values());
+        fetchInitialData();
+    }, [fetchAllTags]);
 
     const handleUpdate = async (id: string, updatedData: Partial<ClothingItem>) => {
-
-        // Build API payload: extract tag IDs as plain strings
-        const apiPayload: any = { ...updatedData };
-        if (updatedData.tags && Array.isArray(updatedData.tags)) {
-            apiPayload.tags = (updatedData.tags as unknown as string[]);
-        }
-
-        // Build UI payload: resolve tag IDs back to full Tag objects for optimistic update
+        // 1. Prepare UI Data
         const uiData = { ...updatedData };
+        
         if (updatedData.tags && Array.isArray(updatedData.tags)) {
-            const tagIds = updatedData.tags as unknown as string[];
-            uiData.tags = mergedTags.filter(t => tagIds.includes(t.id || t._id));
+            // Check if the first element is a string or an object
+            const isStringArray = typeof updatedData.tags[0] === 'string';
+
+            if (isStringArray) {
+                // If they are IDs, filter from the global list to get full objects for the UI
+                const tagIds = updatedData.tags as unknown as string[];
+                uiData.tags = userTags.filter(t => tagIds.includes(t.id || t._id));
+            } else {
+                // If they are already objects (from EditModal), just use them
+                uiData.tags = updatedData.tags;
+            }
         }
 
-        // Optimistic UI update
-        setClothes(prev => prev.map(item =>
+        // 2. Update Local State
+        setClothes(prev => prev.map(item => 
             (item.id === id || item._id === id) ? { ...item, ...uiData as ClothingItem } : item
         ));
 
-        const token = getToken();
+        // 3. Prepare API Data (The server usually only wants the IDs)
+        const apiData = {
+            ...updatedData,
+            tags: updatedData.tags?.map(t => (typeof t === 'string' ? t : (t.id || t._id)))
+        };
+
+        const storedUser = sessionStorage.getItem("user_data");
+        const token = storedUser ? JSON.parse(storedUser).token : "";
 
         try {
             const response = await fetch(buildPath(`api/clothes/${id}`), {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'x-token': token },
-                body: JSON.stringify(apiPayload)
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-token': token
+                },
+                body: JSON.stringify(apiData) // Send the IDs to the server
             });
-
+            
             const data = await response.json();
-
-            if (data.ok) {
-                // Server returns populated doc — use as source of truth
-                setClothes(prev => prev.map(item =>
-                    (item.id === id || item._id === id) ? data.clothes : item
-                ));
-                console.log("Database updated successfully");
-            } else {
-                console.error("Server update failed:", data.msg);
-            }
+            if (!data.ok) console.error("Server update failed:", data.msg);
         } catch (error) {
             console.error("Network error during update:", error);
         }
@@ -202,7 +185,6 @@ export const MyCloset = () => {
     return (
         <div className="flex flex-col gap-8 mt-8 animate-fade-in animation-delay-200">
             <div className="flex flex-col gap-6 bg-[#1a1a1a]/85 border border-white/10 rounded-2xl px-8 py-6 backdrop-blur-md">
-
                 <div className="flex flex-col gap-1">
                     <h1 className="text-white font-display font-bold text-3xl uppercase tracking-widest">
                         My Closet
@@ -212,7 +194,7 @@ export const MyCloset = () => {
                     </p>
                 </div>
 
-                <ClosetFilters
+                <ClosetFilters 
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                     categories={uniqueTypes}
@@ -224,7 +206,7 @@ export const MyCloset = () => {
                     tags={uniqueTags}
                     selectedTags={selectedTags}
                     onToggleTag={toggleTag}
-                    onReset={() => { setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([]); }}
+                    onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([])}}
                 />
 
                 <div className="mt-4">
@@ -232,13 +214,15 @@ export const MyCloset = () => {
                         uniqueTypes.map((type) => {
                             const typeItems = filteredClothes.filter(item => item.type === type);
                             if (typeItems.length === 0) return null;
+
                             return (
-                                <ClosetRow
-                                    key={type}
-                                    title={type}
+                                <ClosetRow 
+                                    key={type} 
+                                    title={type} 
                                     items={typeItems}
-                                    allTags={mergedTags}
+                                    allTags={userTags}
                                     onUpdate={handleUpdate}
+                                    onTagCreated={fetchAllTags} 
                                 />
                             );
                         })
@@ -250,7 +234,6 @@ export const MyCloset = () => {
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
-import { X, Save, Tag as TagIcon } from "lucide-react";
+import { X, Save, Tag as TagIcon, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { buildPath } from "../../utils/buildPath";
 
 interface Tag {
     id: string;
@@ -26,279 +27,225 @@ interface EditModalProps {
     allTags: Tag[];
     onClose: () => void;
     onSave: (id: string, updatedData: Partial<ClothingItem>) => Promise<void>;
+    onTagCreated: () => Promise<void>; 
 }
 
-export const EditModal = ({ item, allTags, onClose, onSave }: EditModalProps) => {
-    
+export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: EditModalProps) => {
     const [title, setTitle] = useState(item.title);
     const [brand, setBrand] = useState(item.brand);
     const [size, setSize] = useState(item.size);
     const [type, setType] = useState(item.type);
-
     const [lastUsed, setLastUsed] = useState(
-        item.lastUsed
-            ? new Date(item.lastUsed).toISOString().split("T")[0]
-            : ""
+        item.lastUsed ? new Date(item.lastUsed).toISOString().split('T')[0] : ""
     );
-    
+
+    // Track selected IDs for the UI toggle logic
     const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
-        item.tags?.map((t) => t.id || t._id) ?? []
+        item.tags?.map(t => t.id || t._id) || []
     );
     
+    const [isAddingTag, setIsAddingTag] = useState(false);
+    const [newTagTitle, setNewTagTitle] = useState("");
+    const [creatingTag, setCreatingTag] = useState(false);
     const [saving, setSaving] = useState(false);
 
     const overlayRef = useRef<HTMLDivElement>(null);
 
-
-
-    // Close on backdrop click
-    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === overlayRef.current) onClose();
     };
 
-
-
-    // Close on Escape
-    useEffect(() => {
-        
-        const handleKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") onClose();
-        };
-        
-        document.addEventListener("keydown", handleKey);
-        
-        return () => document.removeEventListener("keydown", handleKey);
-    
-    }, [onClose]);
-
-
-
-
-    const toggleTag = (id: string) => {
-        
-        setSelectedTagIds((prev) =>
-            
-            prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-        
+    const toggleTag = (tagId: string) => {
+        setSelectedTagIds(prev => 
+            prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
         );
+    };
 
+    const handleCreateTag = async () => {
+        const trimmedTitle = newTagTitle.trim();
+        if (!trimmedTitle) return;
+
+        setCreatingTag(true);
+        const storedUser = sessionStorage.getItem("user_data");
+        const token = storedUser ? JSON.parse(storedUser).token : "";
+
+        try {
+            const response = await fetch(buildPath("api/tags"), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-token": token
+                },
+                body: JSON.stringify({ title: trimmedTitle })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.ok) {
+                await onTagCreated(); // Refresh parent global tag list
+                const newId = data.tag._id || data.tag.id;
+                setSelectedTagIds(prev => [...prev, newId]);
+                setNewTagTitle("");
+                setIsAddingTag(false);
+            }
+        } catch (error) {
+            console.error("Error creating tag:", error);
+        } finally {
+            setCreatingTag(false);
+        }
     };
 
     const handleSave = async () => {
-       
         setSaving(true);
-       
         try {
-       
+            // Map IDs back to full objects for the onSave handler
+            const finalTags = allTags.filter(t => selectedTagIds.includes(t.id || t._id));
+            
             await onSave(item.id || item._id, {
                 title,
                 brand,
                 size,
                 type,
-                lastUsed: new Date(lastUsed),
-                tags: selectedTagIds as any,
+                lastUsed,
+                tags: finalTags
             });
-       
             onClose();
-       
-        } 
-        catch (err) {
-            
-            console.error("Failed to save:", err);
-        
-        } 
-        finally {
-            
+        } catch (error) {
+            console.error("Save failed:", error);
+        } finally {
             setSaving(false);
-        
         }
-
     };
 
     const modalLayout = (
-        
         <div
             ref={overlayRef}
             onClick={handleOverlayClick}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200 p-4"
         >
-            
             <div className="relative w-full max-w-3xl bg-[#111111] border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200">
-
-                {/* Close Button */}
+                
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                 >
-
                     <X size={16} />
-
                 </button>
 
                 <div className="flex flex-col md:flex-row h-full">
-
-                    {/* ── LEFT: Image Panel ── */}
+                    {/* Left: Image Sidebar */}
                     <div className="relative md:w-2/5 h-56 md:h-auto bg-black/40 shrink-0">
-                        
-                        <img
-                            src={item.imagePath}
-                            alt={item.title}
-                            className="w-full h-full object-cover opacity-80"
-                        />
-                        
-                        {/* Some gradient overlay at bottom of image */}
-                        <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/60 to-transparent" />
-                        
+                        <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover opacity-80" />
+                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
                         <div className="absolute bottom-4 left-4">
-                            
                             <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-white/70 bg-black/50 px-2 py-1 rounded-md border border-white/15 backdrop-blur-sm">
-                                {item.type}
+                                {type || item.type}
                             </span>
-
                         </div>
-
                     </div>
 
-
-                    {/* RIGHT: Form Panel*/}
-                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-none">
-
-                        {/* Header */}
+                    {/* Right: Form Content */}
+                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-[600px]">
                         <div className="mb-6">
-                            
                             <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/30 mb-1">Editing Item</p>
-                            
-                            <h2 className="text-white text-xl font-bold uppercase tracking-widest truncate">{item.title}</h2>
-                        
+                            <h2 className="text-white text-xl font-bold uppercase tracking-widest truncate">{title || item.title}</h2>
                         </div>
-
 
                         <div className="flex flex-col gap-4 flex-1">
-
-                            {/* Title */}
                             <Field label="Title">
-                                
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    className={inputClass}
-                                    placeholder="Item name"
-                                />
-
+                                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className={inputClass} placeholder="Item name" />
                             </Field>
 
-                            {/* Brand + Size (side by side) */}
                             <div className="grid grid-cols-2 gap-3">
-                                
                                 <Field label="Brand">
-                                    
-                                    <input
-                                        type="text"
-                                        value={brand}
-                                        onChange={(e) => setBrand(e.target.value)}
-                                        className={inputClass}
-                                        placeholder="Brand"
-                                    />
-                                    
+                                    <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className={inputClass} placeholder="Brand" />
                                 </Field>
-                                
                                 <Field label="Size">
-                                    
-                                    <input
-                                        type="text"
-                                        value={size}
-                                        onChange={(e) => setSize(e.target.value)}
-                                        className={inputClass}
-                                        placeholder="e.g. M, L, 32"
-                                    />
-                                
+                                    <input type="text" value={size} onChange={(e) => setSize(e.target.value)} className={inputClass} placeholder="M, L, 32" />
                                 </Field>
-
                             </div>
 
-                            
-                            {/* Type + Last Used (side by side) */}
                             <div className="grid grid-cols-2 gap-3">
-                                
                                 <Field label="Type">
-                                    
-                                    <input
-                                        type="text"
-                                        value={type}
-                                        onChange={(e) => setType(e.target.value)}
-                                        className={inputClass}
-                                        placeholder="e.g. Shirt, Jacket"
-                                    />
-                                
+                                    <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket" />
                                 </Field>
-
                                 <Field label="Last Used">
-                                
-                                <input
-                                    type="date"
-                                    value={lastUsed}
-                                    onChange={(e) => setLastUsed(e.target.value)}
-                                    className={`${inputClass} scheme-dark`}
-                                />
-
-                            </Field>
-                                
-                                
-
-                            </div>
-                            
-
-                            {/* Tags */}
-                            {allTags.length > 0 && (
-                                <Field label="Tags">
-                                    
-                                    <div className="flex flex-wrap gap-2 pt-1">
-                                        
-                                        {allTags.map((tag) => {
-                                            
-                                            const tagId = tag.id || tag._id;
-                                            
-                                            const active = selectedTagIds.includes(tagId);
-                                            
-                                            return (
-                                                
-                                                <button
-                                                    key={tagId}
-                                                    type="button"
-                                                    onClick={() => toggleTag(tagId)}
-                                                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border transition-all cursor-pointer ${
-                                                        active
-                                                            ? "bg-white text-black border-white"
-                                                            : "bg-white/5 text-white/50 border-white/15 hover:border-white/40 hover:text-white/80"
-                                                    }`}
-                                                >
-                                                    <TagIcon size={15} />
-                                                    {tag.title}
-                                                </button>
-
-                                            );
-
-                                        })}
-
-                                    </div>
-
+                                    <input type="date" value={lastUsed} onChange={(e) => setLastUsed(e.target.value)} className={`${inputClass} scheme-dark`} />
                                 </Field>
+                            </div>
 
-                            )}
+                            <Field label="Tags">
+                                <div className="flex flex-wrap gap-2 pt-1">
+                                    {allTags.map((tag) => {
+                                        const tagId = tag.id || tag._id;
+                                        const active = selectedTagIds.includes(tagId);
+                                        return (
+                                            <button
+                                                key={tagId}
+                                                type="button"
+                                                onClick={() => toggleTag(tagId)}
+                                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border transition-all cursor-pointer ${
+                                                    active ? "bg-white text-black border-white" : "bg-white/5 text-white/50 border-white/15 hover:border-white/40 hover:text-white/80"
+                                                }`}
+                                            >
+                                                <TagIcon size={13} />
+                                                {tag.title}
+                                            </button>
+                                        );
+                                    })}
 
+                                    {isAddingTag ? (
+                                        <div className="flex items-center gap-2 animate-in slide-in-from-left-2 duration-200">
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                value={newTagTitle}
+                                                onChange={(e) => setNewTagTitle(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        handleCreateTag();
+                                                    }
+                                                }}
+                                                placeholder="TAG NAME..."
+                                                className="bg-white/10 border border-white/30 rounded-full px-3 py-1 text-[11px] uppercase tracking-widest text-white focus:outline-none focus:border-white w-28"
+                                                disabled={creatingTag}
+                                            />
+                                            <button 
+                                                type="button"
+                                                onClick={handleCreateTag} 
+                                                disabled={creatingTag}
+                                                className="text-white/80 hover:text-white disabled:opacity-50"
+                                            >
+                                                <Plus size={16}/>
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => setIsAddingTag(false)} 
+                                                className="text-white/30 hover:text-white"
+                                            >
+                                                <X size={14}/>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsAddingTag(true)}
+                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border border-dashed border-white/20 text-white/30 hover:border-white/50 hover:text-white/70 transition-all cursor-pointer"
+                                        >
+                                            <Plus size={13} />
+                                            New Tag
+                                        </button>
+                                    )}
+                                </div>
+                            </Field>
                         </div>
 
-                        {/* Footer Actions.. Basically buttons */}
+                        {/* Footer Actions */}
                         <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-white/10">
-                            
-                            <button
-                                onClick={onClose}
-                                className="px-5 py-2.5 text-[12px] uppercase tracking-widest font-bold text-white/50 hover:text-[red]/80 transition-colors cursor-pointer"
-                            >
+                            <button onClick={onClose} className="px-5 py-2.5 text-[12px] uppercase tracking-widest font-bold text-white/50 hover:text-red-500/80 transition-colors cursor-pointer">
                                 Cancel
                             </button>
-                            
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
@@ -307,30 +254,17 @@ export const EditModal = ({ item, allTags, onClose, onSave }: EditModalProps) =>
                                 <Save size={18} />
                                 {saving ? "Saving..." : "Save Changes"}
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-        
     );
 
-    // This is a portal basically takes the modal contents and  renders it 
-    // as a child of body
-
-    // It helped prevent the modal from being stuck in the containers 
     return createPortal(modalLayout, document.body);
 };
 
-// Helpers (I didnt want to keep writing the same thing over and over )
-
-const inputClass =
-    "w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 text-white text-[11px] uppercase tracking-widest font-bold placeholder:text-white/25 focus:outline-none focus:border-white/40 transition-all";
+const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 text-white text-[11px] uppercase tracking-widest font-bold placeholder:text-white/25 focus:outline-none focus:border-white/40 transition-all";
 
 const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
     <div className="flex flex-col gap-1.5">
