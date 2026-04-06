@@ -9,10 +9,11 @@ const TagSchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: true,
         trim: true
     }
 });
+
+TagSchema.index({ userId: 1, title: 1 }, { unique: true });
 
 TagSchema.set('toJSON', {
     transform: function (doc, ret) {
