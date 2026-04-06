@@ -26,9 +26,10 @@ interface ClosetRowProps {
     allTags: Tag[];                  
     onUpdate: (id: string, data: Partial<ClothingItem>) => Promise<void>;
     onTagCreated: () => Promise<void>;
+    onDelete: (id:string) => Promise<void>;
 }
 
-export const ClosetRow = ({ title, items, allTags, onUpdate, onTagCreated }: ClosetRowProps) => {
+export const ClosetRow = ({ title, items, allTags, onUpdate, onDelete, onTagCreated }: ClosetRowProps) => {
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +67,7 @@ export const ClosetRow = ({ title, items, allTags, onUpdate, onTagCreated }: Clo
                 <div ref={scrollRef} className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide snap-x snap-mandatory">
                     
                     {items.map((item) => (
-                        <ClothingCard key={item.id || item._id} item={item} allTags={allTags} onSave={onUpdate} onTagCreated={onTagCreated}/>
+                        <ClothingCard key={item.id || item._id} item={item} allTags={allTags} onSave={onUpdate} onDelete={onDelete} onTagCreated={onTagCreated}/>
                     ))}
 
                 </div>

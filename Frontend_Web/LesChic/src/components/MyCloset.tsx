@@ -25,7 +25,7 @@ interface ClothingItem {
 }
 
 export const MyCloset = () => {
-    
+
     // State Management
     const [clothes, setClothes] = useState<ClothingItem[]>([]);
     const [userTags, setUserTags] = useState<Tag[]>([]);
@@ -179,6 +179,33 @@ export const MyCloset = () => {
         }
     };
 
+
+    const handleDelete = async(id: string) => {
+        
+        const storedUser = sessionStorage.getItem("user_data");
+        const token = storedUser ? JSON.parse(storedUser).token : "";
+
+        try {
+            const response = await fetch(buildPath(`api/clothes/${id}`), {
+                method: 'DELETE',
+                headers: {
+                    'x-token': token
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.ok) {
+                // Optimistically update UI by removing the item from state
+                setClothes(prev => prev.filter(item => (item.id !== id && item._id !== id)));
+            } else {
+                console.error("Delete failed:", data.msg);
+            }
+        } catch (error) {
+            console.error("Error deleting item:", error);
+        }
+    };
+
     if (loading) {
         return <Loader2 className="animate-spin mx-auto mt-20 text-white" />;
     }
@@ -223,6 +250,7 @@ export const MyCloset = () => {
                                     items={typeItems}
                                     allTags={userTags}
                                     onUpdate={handleUpdate}
+                                    onDelete={handleDelete}
                                     onTagCreated={fetchAllTags} 
                                 />
                             );

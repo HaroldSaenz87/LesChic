@@ -97,6 +97,42 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
         }
     };
 
+
+    
+    const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
+
+    const handleDeleteTag = async (e: React.MouseEvent, tagId: string) => {
+        e.stopPropagation();
+
+        // First click: Enter confirmation state
+        if (deletingTagId !== tagId) {
+            setDeletingTagId(tagId);
+            // Auto-cancel after 3 seconds if they don't click again
+            setTimeout(() => setDeletingTagId(null), 3000);
+            return;
+        }
+
+        // Second click: Proceed with deletion
+        const storedUser = sessionStorage.getItem("user_data");
+        const token = storedUser ? JSON.parse(storedUser).token : "";
+
+        try {
+            const response = await fetch(buildPath(`api/tags/${tagId}`), {
+                method: "DELETE",
+                headers: { "x-token": token }
+            });
+
+            if (response.ok) {
+                await onTagCreated();
+                setSelectedTagIds(prev => prev.filter(id => id !== tagId));
+                setDeletingTagId(null);
+            }
+        } catch (error) {
+            console.error("Error deleting tag:", error);
+            setDeletingTagId(null);
+        }
+    };
+
     const handleSave = async () => {
         setSaving(true);
         try {
@@ -123,9 +159,9 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
         <div
             ref={overlayRef}
             onClick={handleOverlayClick}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
         >
-            <div className="relative w-full max-w-3xl bg-[#111111] border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-200">
+            <div className="relative w-full max-w-3xl bg-[#111111] border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-fade-in2 zoom-in-95 ">
                 
                 <button
                     onClick={onClose}
@@ -147,7 +183,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                     </div>
 
                     {/* Right: Form Content */}
-                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-150">
+                    <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-150 scrollbar-hide">
                         <div className="mb-6">
                             <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/30 mb-1">Editing Item</p>
                             <h2 className="text-white text-xl font-bold uppercase tracking-widest truncate">{title || item.title}</h2>
@@ -180,19 +216,51 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                 <div className="flex flex-wrap gap-2 pt-1">
                                     {allTags.map((tag) => {
                                         const tagId = tag.id || tag._id;
+                                        const isConfirming = deletingTagId === tagId;
                                         const active = selectedTagIds.includes(tagId);
+
                                         return (
-                                            <button
-                                                key={tagId}
-                                                type="button"
-                                                onClick={() => toggleTag(tagId)}
-                                                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border transition-all cursor-pointer ${
-                                                    active ? "bg-white text-black border-white" : "bg-white/5 text-white/50 border-white/15 hover:border-white/40 hover:text-white/80"
-                                                }`}
-                                            >
-                                                <TagIcon size={13} />
-                                                {tag.title}
-                                            </button>
+                                            
+                                            <div key={tagId} className="relative group">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => !isConfirming && toggleTag(tagId)}
+                                                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border transition-all cursor-pointer 
+                                                        ${isConfirming 
+                                                            ? "bg-red-500/20 text-red-500 border-red-500/50 ring-1 ring-red-500/50" 
+                                                            : active 
+                                                                ? "bg-white text-black border-white" 
+                                                                : "bg-white/5 text-white/50 border-white/15 hover:border-white/40 hover:text-white/80"
+                                                        }`}
+                                                >
+                                                    <TagIcon size={13} className={isConfirming ? "animate-pulse" : ""} />
+                                                    {isConfirming ? "Delete?" : tag.title}
+                                                </button>
+
+                                                {/* The Delete Trigger */}
+                                                {!isConfirming ? (
+                                                    <div
+                                                        onClick={(e) => handleDeleteTag(e, tagId)}
+                                                        className="absolute -top-1.5 -right-1.5 bg-white text-black rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer shadow-lg z-20 border border-black/10"
+                                                    >
+                                                        <X size={10} strokeWidth={3} />
+                                                    </div>
+                                                ) : (
+                                                    // Invisible overlay to cancel confirmation if clicking outside the tag
+                                                    <div 
+                                                        className="fixed inset-0 z-10" 
+                                                        onClick={() => setDeletingTagId(null)} 
+                                                    />
+                                                )}
+                                                
+                                                {/* If confirming, second click anywhere on the button deletes it */}
+                                                {isConfirming && (
+                                                    <div 
+                                                        onClick={(e) => handleDeleteTag(e, tagId)}
+                                                        className="absolute inset-0 z-20 cursor-pointer rounded-full"
+                                                    />
+                                                )}
+                                            </div>
                                         );
                                     })}
 

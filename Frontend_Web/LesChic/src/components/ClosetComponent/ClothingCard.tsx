@@ -1,6 +1,7 @@
 import { Edit2, MoreVertical, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { EditModal } from "./EditModal";
+import { DeleteModal } from "./DeleteModal";
 
 interface ClothingItem {
     id: string;
@@ -34,6 +35,8 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
     const [showMenu, setShowMenu] = useState(false);
 
     const[showEditModal, setShowEditModal] = useState(false);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +121,9 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
                                         e.stopPropagation();
                                         //console.log("Delete:", item.id || item._id);
                                         setShowMenu(false);
-                                        onDelete?.(item.id || item._id);
+                                        setShowDeleteModal(true);
+
+                                        
                                     }}
                                     className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-colors uppercase font-bold tracking-wider"
                                 >
@@ -158,6 +163,19 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
                 
             </div>
 
+            {/* Render Delete Modal */}
+            {showDeleteModal && (
+                <DeleteModal 
+                    title={item.title}
+                    onClose={() => setShowDeleteModal(false)}
+                    onConfirm={() => {
+                        onDelete?.(item.id || item._id);
+                        setShowDeleteModal(false);
+                    }}
+                />
+            )}
+
+            {/* Render the edit box or modal or whatever you want to call it */}
             {showEditModal && (
                     <EditModal
                         item={item}
