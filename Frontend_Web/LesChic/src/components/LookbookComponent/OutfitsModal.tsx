@@ -28,8 +28,8 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
     const [selectedType, setSelectedType] = useState<string>("All");
 
     const hasTitle = title.trim().length > 0;
-    const hasSelection = selectedIds.length > 0;
-    const isButtonDisabled = !hasTitle || !hasSelection || saving;
+
+
 
     const categories = useMemo(() => {
 
