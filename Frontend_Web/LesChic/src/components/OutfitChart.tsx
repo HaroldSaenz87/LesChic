@@ -71,7 +71,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
                 {/* Percentage center label */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     
-                    <p className="text-3xl font-bold text-white font-display">{percentage}%</p>
+                    <p className="text-3xl font-bold text-white stat-value">{percentage}%</p>
                     
                     <p className="text-white/70 text-[12px] uppercase tracking-widest">used</p>
                 

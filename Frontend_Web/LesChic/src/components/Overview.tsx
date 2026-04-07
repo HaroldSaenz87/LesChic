@@ -1,5 +1,5 @@
 import { Calendar, LayoutDashboard, List, Shirt } from "lucide-react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import { OutfitChart } from "./OutfitChart";
 
 interface StatCardProps {
@@ -20,7 +20,7 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
 
             <div className="flex flex-col gap-4">
                 {/* Large count number */}
-                <p className="text-5xl font-bold text-white font-display tracking-tight">
+                <p className="text-4xl font-bold text-white stat-value tracking-tight">
                     {count}
                 </p>
 
@@ -49,14 +49,16 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
 
 export const Overview = () => {
 
+    const { clothes = [] } = useOutletContext<{ clothes: any[] }>();
+
     // Read user name from sessionStorage set at login
     const user = JSON.parse(sessionStorage.getItem("user_data") || "{}");
     
     // Stats card config (counts will be replaced with real api later)
     const stats = [
-        { icon: <Shirt size={20} />, label: "Closet Items", count: 0, to: "/dashboard/closet" },
+        { icon: <Shirt size={20} />, label: "Closet Items", count: clothes.length, to: "/dashboard/closet" },
         { icon: <List size={20} />, label: "Lookbooks", count: 0, to: "/dashboard/lookbooks" },
-        { icon: <Calendar size={20} />, label: "Planned Outfits", count: 10, to: "/dashboard/planner" },
+        { icon: <Calendar size={20} />, label: "Planned Outfits", count: 0, to: "/dashboard/planner" },
     ];
 
     return(

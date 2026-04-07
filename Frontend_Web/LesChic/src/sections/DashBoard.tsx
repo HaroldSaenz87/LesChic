@@ -1,20 +1,55 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { SideNav } from "../components/SideNav";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { buildPath } from "../utils/buildPath";
 
 export const DashBoard = () => {
 
     const navigate = useNavigate();
 
+    // for the collection
+    const [clothes, setClothes] = useState([]);
+
     useEffect(() => {
 
         // If the user lands here but the data is gone, kick them out immediately
-        const isAuthenticated = sessionStorage.getItem("user_data") !== null;
+        const rawData = sessionStorage.getItem("user_data");
+        const isAuthenticated = rawData !== null;
         
 
         if (!isAuthenticated) {
             navigate("/", { replace: true });
+            return;
         }
+
+        const userData = JSON.parse(rawData);
+
+        const fetchClothes = async () => {
+            try {
+                // Use your buildPath utility here just like in your other components
+                const response = await fetch(buildPath('api/clothes'), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-token': userData.token 
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    // This updates the state that is passed to <Outlet context={{ clothes }} />
+                    setClothes(data.clothes);
+                }
+            } catch (error) {
+                console.error("LesChic Dashboard Fetch Error:", error);
+            }
+        };
+
+        fetchClothes();
+
+
+
     }, [navigate]);
 
     return (
@@ -31,7 +66,7 @@ export const DashBoard = () => {
                 <main className="flex-1 overflow-y-auto p-8 relative">
                     
                     <div className="max-w-7xl mx-auto">
-                        <Outlet /> 
+                        <Outlet context={{clothes}} /> 
                     </div>
                     
                 </main>
