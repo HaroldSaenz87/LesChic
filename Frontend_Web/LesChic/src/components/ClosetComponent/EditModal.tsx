@@ -31,10 +31,12 @@ interface EditModalProps {
 }
 
 export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: EditModalProps) => {
+
     const [title, setTitle] = useState(item.title);
     const [brand, setBrand] = useState(item.brand);
     const [size, setSize] = useState(item.size);
     const [type, setType] = useState(item.type);
+
     const [lastUsed, setLastUsed] = useState(
         item.lastUsed ? new Date(item.lastUsed).toISOString().split('T')[0] : ""
     );
@@ -52,26 +54,34 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     const overlayRef = useRef<HTMLDivElement>(null);
 
     const handleOverlayClick = (e: React.MouseEvent) => {
+
         if (e.target === overlayRef.current) onClose();
+
     };
 
     const toggleTag = (tagId: string) => {
+
         setSelectedTagIds(prev => 
             prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
         );
+
     };
 
     // Handle tags
 
     const handleCreateTag = async () => {
+
         const trimmedTitle = newTagTitle.trim();
+
         if (!trimmedTitle) return;
 
         setCreatingTag(true);
+
         const storedUser = sessionStorage.getItem("user_data");
         const token = storedUser ? JSON.parse(storedUser).token : "";
 
         try {
+
             const response = await fetch(buildPath("api/tags"), {
                 method: "POST",
                 headers: {
@@ -90,6 +100,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                 setNewTagTitle("");
                 setIsAddingTag(false);
             }
+
         } catch (error) {
             console.error("Error creating tag:", error);
         } finally {
@@ -102,6 +113,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
 
     const handleDeleteTag = async (e: React.MouseEvent, tagId: string) => {
+
         e.stopPropagation();
 
         // First click: Enter confirmation state
@@ -134,8 +146,10 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     };
 
     const handleSave = async () => {
+
         setSaving(true);
         try {
+
             // Map IDs back to full objects for the onSave handler
             const finalTags = allTags.filter(t => selectedTagIds.includes(t.id || t._id));
             
@@ -156,64 +170,86 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     };
 
     const modalLayout = (
+
         <div
             ref={overlayRef}
             onClick={handleOverlayClick}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
         >
+            
             <div className="relative w-full max-w-3xl bg-[#111111] border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-fade-in2 zoom-in-95 ">
                 
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+                    className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-[red] hover:bg-white/10 transition-all cursor-pointer"
                 >
                     <X size={16} />
                 </button>
 
                 <div className="flex flex-col md:flex-row h-full">
+                    
                     {/* Left: Image Sidebar */}
                     <div className="relative md:w-2/5 h-56 md:h-auto bg-black/40 shrink-0">
+                        
                         <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover opacity-80" />
+                        
                         <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/60 to-transparent" />
+                        
                         <div className="absolute bottom-4 left-4">
+                            
                             <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-white/70 bg-black/50 px-2 py-1 rounded-md border border-white/15 backdrop-blur-sm">
                                 {type || item.type}
                             </span>
+                        
                         </div>
+
                     </div>
 
                     {/* Right: Form Content */}
                     <div className="flex flex-col flex-1 p-6 md:p-8 overflow-y-auto max-h-[80vh] md:max-h-150 scrollbar-hide">
+                        
                         <div className="mb-6">
+                            
                             <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/30 mb-1">Editing Item</p>
+                            
                             <h2 className="text-white text-xl font-bold uppercase tracking-widest truncate">{title || item.title}</h2>
+                        
                         </div>
 
                         <div className="flex flex-col gap-4 flex-1">
+                            
                             <Field label="Title">
                                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className={inputClass} placeholder="Item name" />
                             </Field>
 
                             <div className="grid grid-cols-2 gap-3">
+                                
                                 <Field label="Brand">
                                     <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className={inputClass} placeholder="Brand" />
                                 </Field>
+                                
                                 <Field label="Size">
                                     <input type="text" value={size} onChange={(e) => setSize(e.target.value)} className={inputClass} placeholder="M, L, 32" />
                                 </Field>
+                            
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
+                                
                                 <Field label="Type">
                                     <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket" />
                                 </Field>
+                                
                                 <Field label="Last Used">
                                     <input type="date" value={lastUsed} onChange={(e) => setLastUsed(e.target.value)} className={`${inputClass} scheme-dark`} />
                                 </Field>
+                            
                             </div>
 
                             <Field label="Tags">
+                                
                                 <div className="flex flex-wrap gap-2 pt-1">
+                                    
                                     {allTags.map((tag) => {
                                         const tagId = tag.id || tag._id;
                                         const isConfirming = deletingTagId === tagId;
@@ -222,6 +258,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                         return (
                                             
                                             <div key={tagId} className="relative group">
+                                                
                                                 <button
                                                     type="button"
                                                     onClick={() => !isConfirming && toggleTag(tagId)}
@@ -239,6 +276,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
 
                                                 {/* The Delete Trigger */}
                                                 {!isConfirming ? (
+                                                    
                                                     <div
                                                         onClick={(e) => handleDeleteTag(e, tagId)}
                                                         className="absolute -top-1.5 -right-1.5 bg-white text-black rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer shadow-lg z-20 border border-black/10"
@@ -246,26 +284,34 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                                         <X size={10} strokeWidth={3} />
                                                     </div>
                                                 ) : (
+                                                    
                                                     // Invisible overlay to cancel confirmation if clicking outside the tag
                                                     <div 
                                                         className="fixed inset-0 z-10" 
                                                         onClick={() => setDeletingTagId(null)} 
                                                     />
+                                                
                                                 )}
                                                 
                                                 {/* If confirming, second click anywhere on the button deletes it */}
                                                 {isConfirming && (
+                                                    
                                                     <div 
                                                         onClick={(e) => handleDeleteTag(e, tagId)}
                                                         className="absolute inset-0 z-20 cursor-pointer rounded-full"
                                                     />
+                                                
                                                 )}
+                                            
                                             </div>
                                         );
+
                                     })}
 
                                     {isAddingTag ? (
+                                        
                                         <div className="flex items-center gap-2 animate-in slide-in-from-left-2 duration-200">
+                                            
                                             <input
                                                 autoFocus
                                                 type="text"
@@ -281,6 +327,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                                 className="bg-white/10 border border-white/30 rounded-full px-3 py-1 text-[11px] uppercase tracking-widest text-white focus:outline-none focus:border-white w-28"
                                                 disabled={creatingTag}
                                             />
+                                            
                                             <button 
                                                 type="button"
                                                 onClick={handleCreateTag} 
@@ -289,6 +336,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                             >
                                                 <Plus size={16}/>
                                             </button>
+
                                             <button 
                                                 type="button"
                                                 onClick={() => setIsAddingTag(false)} 
@@ -296,6 +344,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                             >
                                                 <X size={14}/>
                                             </button>
+
                                         </div>
                                     ) : (
                                         <button
@@ -307,15 +356,20 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                             New Tag
                                         </button>
                                     )}
+
                                 </div>
+
                             </Field>
+
                         </div>
 
                         {/* Footer Actions */}
                         <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-white/10">
+                            
                             <button onClick={onClose} className="px-5 py-2.5 text-[12px] uppercase tracking-widest font-bold text-white/50 hover:text-red-500/80 transition-colors cursor-pointer">
                                 Cancel
                             </button>
+                            
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
@@ -324,10 +378,15 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                                 <Save size={18} />
                                 {saving ? "Saving..." : "Save Changes"}
                             </button>
+                        
                         </div>
+                    
                     </div>
+                
                 </div>
+            
             </div>
+        
         </div>
     );
 

@@ -8,6 +8,7 @@ import { Overview } from "./components/Overview"
 import { MyCloset } from "./components/MyCloset"
 import { useEffect } from "react"
 import { buildPath } from "./utils/buildPath"
+import { Lookbooks } from "./components/Lookbooks"
 
 
 function App() {
@@ -98,7 +99,7 @@ function App() {
           {/* Below are nested dashboard pages */}
           <Route path="closet" element={<MyCloset />} />
 
-          <Route path="lookbooks" element={<div>Lookbooks Content</div>} />
+          <Route path="lookbooks" element={<Lookbooks />} />
           
           <Route path="planner" element={<div>Planner Content</div>} />
         
