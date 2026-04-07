@@ -27,6 +27,10 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedType, setSelectedType] = useState<string>("All");
 
+    const hasTitle = title.trim().length > 0;
+    const hasSelection = selectedIds.length > 0;
+    const isButtonDisabled = !hasTitle || !hasSelection || saving;
+
     const categories = useMemo(() => {
 
         const types = allClothes.map(item => item.type);
@@ -115,15 +119,20 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
                         
                         <div>
                             
-                            <label className="text-white/70 text-[15px] uppercase tracking-widest font-display block mb-2">Lookbook Name</label>
+                            <label className="text-white/70 text-[15px] uppercase tracking-widest font-display block mb-2">Lookbook Name <span className="text-red-500">*</span></label>
                             
                             <input
                                 type="text"
                                 value={title}
                                 onChange={e => setTitle(e.target.value)}
                                 placeholder="e.g. Summer in Positano"
-                                className="w-full bg-[#242424] border border-white/30 rounded-xl px-4 py-3 text-white font-display outline-none focus:border-white/60 transition-all"
+                                className={`w-full bg-[#242424] border border-white/30 rounded-xl px-4 py-3 text-white font-display outline-none focus:border-white/60 transition-all ${
+                                    !hasTitle && title.length > 0 ? "border-red-500/50" : "border-white/30 focus:border-white/60"}`}
                             />
+
+                            {!hasTitle && title.length === 0 && (
+                                <p className="text-[12px] text-white/30 mt-1 uppercase tracking-tighter italic">Name is required to outfits</p>
+                            )}
 
                         </div>
                         
