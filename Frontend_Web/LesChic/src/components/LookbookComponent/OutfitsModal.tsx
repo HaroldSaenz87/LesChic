@@ -17,12 +17,19 @@ interface CreateModalProps {
     allClothes: ClothingItem[];
     onClose: () => void;
     onCreated: () => void;
+    initialData?: any;
 }
 
-export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProps) => {
+export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: CreateModalProps) => {
     
-    const [title, setTitle] = useState("");
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [title, setTitle] = useState(initialData?.title || "");
+    const [selectedIds, setSelectedIds] = useState<string[]>(
+        initialData?.clothes.map((c: any) => c._id || c.id) || []
+    );
+
+    // this weird part is like saying... variable = initialData ? true : false;
+    const isEditing = !!initialData;
+
     const [saving, setSaving] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedType, setSelectedType] = useState<string>("All");
@@ -65,6 +72,8 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
         );
     };
 
+
+    // create an update or outfit
     const handleCreate = async () => {
 
         if (!title.trim() || selectedIds.length === 0) return;
@@ -73,11 +82,16 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
         
         const token = storedUser ? JSON.parse(storedUser).token : "";
 
+        // update or create outfit
+        const endpoint = isEditing ? buildPath(`api/lists/${initialData._id || initialData.id}`) : buildPath("api/lists");
+        
+        const method = isEditing ? "PUT" : "POST";
+
         setSaving(true);
 
         try {
-            const res = await fetch(buildPath("api/lists"), {
-                method: "POST",
+            const res = await fetch(endpoint, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json",
                     "x-token": token,
@@ -104,7 +118,7 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 shrink-0">
                     
-                    <h2 className="text-white font-display font-bold text-xl uppercase tracking-widest">New Lookbook</h2>
+                    <h2 className="text-white font-display font-bold text-xl uppercase tracking-widest">{isEditing ? `Edit: ${initialData.title}` : "New Lookbook"}</h2>
                     
                     <button onClick={onClose} className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center text-white/70 hover:text-[red] transition-all cursor-pointer">
                         <X size={14} />
@@ -278,8 +292,8 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
                         disabled={!title.trim() || selectedIds.length === 0 || saving} 
                         className="flex items-center gap-2 bg-secondary text-black font-display text-sm uppercase tracking-widest px-5 py-2.5 rounded-xl disabled:opacity-30 hover:brightness-110 transition-all"
                     >
-                        {saving ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
-                        Create Lookbook
+                        {saving ? (<Loader2 size={12} className="animate-spin" />) : (isEditing ? <Check size={12} /> : <Plus size={12} />)}
+                        {isEditing ? "Save Changes" : "Create Lookbook"}
                     </button>
                 
                 </div>

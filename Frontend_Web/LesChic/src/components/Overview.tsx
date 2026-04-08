@@ -49,7 +49,7 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
 
 export const Overview = () => {
 
-    const { clothes = [] } = useOutletContext<{ clothes: any[] }>();
+    const { clothes = [], lookbooks = [] } = useOutletContext<{ clothes: any[], lookbooks: any[] }>();
 
     // Read user name from sessionStorage set at login
     const user = JSON.parse(sessionStorage.getItem("user_data") || "{}");
@@ -57,7 +57,7 @@ export const Overview = () => {
     // Stats card config (counts will be replaced with real api later)
     const stats = [
         { icon: <Shirt size={20} />, label: "Closet Items", count: clothes.length, to: "/dashboard/closet" },
-        { icon: <List size={20} />, label: "Lookbooks", count: 0, to: "/dashboard/lookbooks" },
+        { icon: <List size={20} />, label: "Lookbooks", count: lookbooks.length, to: "/dashboard/lookbooks" },
         { icon: <Calendar size={20} />, label: "Planned Outfits", count: 0, to: "/dashboard/planner" },
     ];
 
@@ -77,7 +77,7 @@ export const Overview = () => {
                         </h1>
                         
                         <p className="text-white/70 text-sm uppercase tracking-widest mt-1">
-                            Here's your wardrobe at a glance
+                            A data-driven look at why you have nothing to wear
                         </p>
                     
                     </div>

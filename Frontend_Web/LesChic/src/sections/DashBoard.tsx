@@ -9,6 +9,7 @@ export const DashBoard = () => {
 
     // for the collection
     const [clothes, setClothes] = useState([]);
+    const [lookbooks, setLookbooks] = useState([]);
 
     useEffect(() => {
 
@@ -24,6 +25,7 @@ export const DashBoard = () => {
 
         const userData = JSON.parse(rawData);
 
+        // clothing items fetching
         const fetchClothes = async () => {
             try {
                 // Use your buildPath utility here just like in your other components
@@ -46,7 +48,30 @@ export const DashBoard = () => {
             }
         };
 
+        const fetchLookbooks = async () => {
+            try{
+                const response = await fetch(buildPath('api/lists'), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-token': userData.token
+                    }
+                });
+
+                const data = await response.json();
+
+                if(data.ok){
+                    setLookbooks(data.lists);
+                }
+
+            }
+            catch(error){
+                console.error("Lookbook fetch error:", error);
+            }
+        };
+
         fetchClothes();
+        fetchLookbooks();
 
 
 
@@ -66,7 +91,7 @@ export const DashBoard = () => {
                 <main className="flex-1 overflow-y-auto p-8 relative">
                     
                     <div className="max-w-7xl mx-auto">
-                        <Outlet context={{clothes}} /> 
+                        <Outlet context={{clothes, lookbooks}} /> 
                     </div>
                     
                 </main>

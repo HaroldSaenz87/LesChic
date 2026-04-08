@@ -12,6 +12,25 @@ export const Lookbooks = () => {
     const [showCreate, setShowCreate] = useState(false);
     const [sortBy, setSortBy] = useState<"recent" | "az" | "most">("recent");
 
+
+    const [editingLookbook, setEditingLookbook] = useState<any | null>(null);
+
+    const deleteLookbook = async (id: string) => {
+        try {
+            const res = await fetch(buildPath(`api/lists/${id}`), {
+                method: "DELETE",
+                headers: { "x-token": getToken() }
+            });
+
+            if ((await res.json()).ok) fetchLookbooks();
+
+        } catch (err) { 
+
+            console.error(err); 
+        }
+
+    };
+
     const getToken = () => {
 
         const storedUser = sessionStorage.getItem("user_data");
@@ -111,7 +130,7 @@ export const Lookbooks = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             
                             {sortedLookbooks.map(lb => (
-                                <OutfitsCard key={lb._id || lb.id} lookbook={lb} onClick={() => console.log(lb._id || lb.id)} />
+                                <OutfitsCard key={lb._id || lb.id} lookbook={lb} onClick={() => setEditingLookbook(lb)} onDelete={deleteLookbook} />
                             ))}
                             
                             <div onClick={() => setShowCreate(true)} className="border border-dashed border-white/30 rounded-2xl h-52 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/3 transition-all">
@@ -140,7 +159,9 @@ export const Lookbooks = () => {
             
             </div>
 
-            {showCreate && <OutfitsModal allClothes={allClothes} onClose={() => setShowCreate(false)} onCreated={fetchLookbooks} />}
+            {(showCreate || editingLookbook) && <OutfitsModal allClothes={allClothes} initialData={editingLookbook} onClose={() => {setShowCreate(false); setEditingLookbook(null); }} onCreated={fetchLookbooks} />}
+
+            
         </>
     );
 };
