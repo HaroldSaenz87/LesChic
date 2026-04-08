@@ -9,6 +9,7 @@ import { MyCloset } from "./components/MyCloset"
 import { useEffect } from "react"
 import { buildPath } from "./utils/buildPath"
 import { Lookbooks } from "./components/Lookbooks"
+import { Planner } from "./components/Planner"
 
 
 function App() {
@@ -101,7 +102,7 @@ function App() {
 
           <Route path="lookbooks" element={<Lookbooks />} />
           
-          <Route path="planner" element={<div>Planner Content</div>} />
+          <Route path="planner" element={<Planner />} />
         
         </Route>
 

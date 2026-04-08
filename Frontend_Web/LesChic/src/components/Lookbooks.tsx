@@ -16,20 +16,31 @@ export const Lookbooks = () => {
     const [editingLookbook, setEditingLookbook] = useState<any | null>(null);
 
     const deleteLookbook = async (id: string) => {
-        try {
-            const res = await fetch(buildPath(`api/lists/${id}`), {
-                method: "DELETE",
-                headers: { "x-token": getToken() }
-            });
+    if (!id) {
+        console.error("Delete aborted: No ID provided");
+        return;
+    }
 
-            if ((await res.json()).ok) fetchLookbooks();
+    try {
+        const res = await fetch(buildPath(`api/lists/${id}`), {
+            method: "DELETE",
+            headers: { "x-token": getToken() }
+        });
 
-        } catch (err) { 
+        const data = await res.json();
 
-            console.error(err); 
+        if (data.ok) {
+            
+            fetchLookbooks(); 
+        } else {
+
+            // This will show you the specific error message from your catch block
+            console.error("Delete failed:", data.msg); 
         }
-
-    };
+    } catch (err) { 
+        console.error("Network error during delete:", err); 
+    }
+};
 
     const getToken = () => {
 
@@ -130,7 +141,7 @@ export const Lookbooks = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             
                             {sortedLookbooks.map(lb => (
-                                <OutfitsCard key={lb._id || lb.id} lookbook={lb} onClick={() => setEditingLookbook(lb)} onDelete={deleteLookbook} />
+                                <OutfitsCard key={lb._id || lb.id} lookbook={lb} onClick={() => setEditingLookbook(lb)} onDelete={() => deleteLookbook(lb._id || lb.id)} />
                             ))}
                             
                             <div onClick={() => setShowCreate(true)} className="border border-dashed border-white/30 rounded-2xl h-52 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/3 transition-all">

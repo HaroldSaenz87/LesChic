@@ -151,6 +151,153 @@
   }
 
 
+ /* calendar styles */
+
+  .fc {
+    /* Use white or secondary for lines on the dark card */
+    --fc-border-color: rgba(255, 255, 255, 0.1);
+    
+    /* Buttons: Keep them visible with your primary/accent pop */
+    --fc-button-bg-color: var(--color-primary);
+    --fc-button-border-color: var(--color-accent);
+    --fc-button-hover-bg-color: var(--color-accent);
+    --fc-button-active-bg-color: var(--color-secondary2);
+    
+    /* Global text color: must be light for a dark background */
+    color: white; 
+    font-family: var(--font-display);
+  }
+
+
+
+
+  /* Target the day numbers (1, 2, 3...) */
+  .fc .fc-daygrid-day-number {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 10px !important;
+  }
+
+
+  /* Individual Day Cell Background */
+  .fc .fc-daygrid-day {
+  /* Using your surface color with low opacity for a distinct, warm feel */
+  background-color: color-mix(black 45%, transparent) !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover state to make the grid feel interactive */
+.fc .fc-daygrid-day:hover {
+  background-color: color-mix(in srgb, var(--color-surface) 20%, transparent) !important;
+  cursor: cell;
+}
+
+  /* Off-month Day Background (Days from prev/next month) */
+  .fc .fc-day-other {
+    background-color: rgba(0, 0, 0, 0.205); /* Darker to show they aren't the focus */
+    opacity: 1;
+  }
+
+
+
+
+  .fc .fc-col-header {
+    background-color: rgba(255, 255, 255, 0.05) !important; /* A light translucent tint */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Target the individual cells for a more "blocked" look */
+  .fc .fc-col-header-cell {
+    background-color: var(--color-secondary) !important;
+    border: 1px solid var(--color-accent) !important;
+  }
+
+
+  /* Table Header (Mon, Tue, etc.) */
+  .fc .fc-col-header-cell-cushion {
+    
+    /* Using your secondary (light pink/clay) for the headers */
+    color: black !important; 
+    font-weight: 600;
+    padding: 15px !important;
+    font-size: 17px;
+  }
+
+
+
+
+
+  /* Toolbar Title (Month and Year) */
+  .fc .fc-toolbar-title {
+    color: white !important;
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+  }
+
+
+
+
+
+  /* Fix visibility for FullCalendar Buttons */
+  .fc .fc-button {
+
+    background-color: var(--color-secondary) !important;
+    border: 1px solid var(--color-accent) !important;
+    
+    text-transform: uppercase !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.1em !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.5rem !important;
+    color: black !important;
+    cursor: pointer;
+  }
+
+  .fc .fc-button:hover {
+    background-color: var(--color-accent) !important;
+    color: white !important;
+  }
+
+  
+  /* The Grid Lines - visible but subtle on dark */
+  .fc-theme-standard td, .fc-theme-standard th, .fc-theme-standard .fc-scrollgrid {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+
+
+
+
+
+  /* Today's Highlight */
+  .fc .fc-day-today {
+    /* Using your gold accent with low opacity for a luxury 'glow' */
+    background: color-mix(in srgb, var(--color-secondary) 35%, transparent) !important;
+    position: relative;
+  }
+
+  .fc .fc-day-today::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px; /* Slightly thinner for a cleaner look */
+    /* Using the solid gold accent for the top bar indicator */
+    background: var(--color-secondary) !important; 
+  }
+
+  /* Ensuring the date number remains legible on the highlight */
+  .fc .fc-day-today .fc-daygrid-day-number {
+    color: var(--color-secondary) !important;
+    font-weight: bold;
+  }
+
+  
+
+
 }
 
 @layer components{
