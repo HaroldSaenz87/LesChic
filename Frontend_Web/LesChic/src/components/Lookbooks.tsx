@@ -24,9 +24,12 @@ export const Lookbooks = () => {
         const token = getToken();
         
         try {
-            const res = await fetch(buildPath("api/lookbooks"), { headers: { "x-token": token } });
+            
+            const res = await fetch(buildPath("api/lists"), { headers: { "x-token": token } });
             const data = await res.json();
-            if (data.ok) setLookbooks(data.lookbooks);
+
+            if (data.ok) setLookbooks(data.lists);
+
         } catch (err) {
             console.error("Error fetching lookbooks:", err);
         } finally {
@@ -53,7 +56,16 @@ export const Lookbooks = () => {
 
     const sortedLookbooks = [...lookbooks].sort((a, b) => {
         if (sortBy === "az") return (a.title || "").localeCompare(b.title || "");
+        
         if (sortBy === "most") return b.clothes.length - a.clothes.length;
+
+        if (sortBy === "recent") {
+            // compare the MongoDB _id strings
+            const idA = a?._id|| a?.id || "";
+            const idB = b?._id || b?.id || "";
+            console.log("Comparing:", idA, "with", idB);
+            return idB.localeCompare(idA)
+        }
         return 0;
     });
 
@@ -99,14 +111,14 @@ export const Lookbooks = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             
                             {sortedLookbooks.map(lb => (
-                                <OutfitsCard key={lb._id} lookbook={lb} onClick={() => console.log(lb._id)} />
+                                <OutfitsCard key={lb._id || lb.id} lookbook={lb} onClick={() => console.log(lb._id || lb.id)} />
                             ))}
                             
-                            <div onClick={() => setShowCreate(true)} className="border border-dashed border-white/12 rounded-2xl h-52 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/3 transition-all">
+                            <div onClick={() => setShowCreate(true)} className="border border-dashed border-white/30 rounded-2xl h-52 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-white/3 transition-all">
                                 
-                                <Plus size={16} className="text-white/30" />
+                                <Plus size={20} className="text-white/50" />
                                 
-                                <p className="italic text-white/30 text-sm">Create a lookbook</p>
+                                <p className="italic text-white/50 text-md">Create a lookbook</p>
                             
                             </div>
                         

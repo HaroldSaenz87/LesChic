@@ -76,7 +76,7 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated }: CreateModalProp
         setSaving(true);
 
         try {
-            const res = await fetch(buildPath("api/lookbooks"), {
+            const res = await fetch(buildPath("api/lists"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

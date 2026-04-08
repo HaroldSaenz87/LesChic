@@ -85,30 +85,16 @@ export const OutfitsCard = ({ lookbook, onClick }: LookbookCardProps) => {
             {/* Card body */}
             <div className="px-4 py-3 flex flex-col gap-2">
                 
-                <p className="text-white font-display italic text-base leading-tight truncate">
+                <p className="text-white font-display italic text-[23px] leading-tight truncate">
                     {lookbook.title || "Untitled Lookbook"}
                 </p>
                 
                 <div className="flex items-center justify-between">
                     
-                    <span className="font-display text-[10px] text-white/35 uppercase tracking-widest">
+                    <span className="font-display text-[13px] text-white/65 uppercase tracking-widest">
                         {lookbook.clothes.length} {lookbook.clothes.length === 1 ? "piece" : "pieces"}
                     </span>
                     
-                    <div className="flex gap-1">
-                        
-                        {lookbook.clothes.slice(0, 3).flatMap(item =>
-                            (item.palette || "").split(",").slice(0, 1).map((color, ci) => (
-                                <div
-                                    key={`${item._id}-${ci}`}
-                                    className="w-2.5 h-2.5 rounded-full border border-white/10"
-                                    style={{ background: color.trim() }}
-                                />
-                            ))
-
-                        )}
-
-                    </div>
 
                 </div>
             
