@@ -66,5 +66,72 @@ router.get("/", async (req, res) => {
     }
 })
 
+// update a single list
+router.put("/:id", async (req, res) => {
+    try {
+        const { uid } = req;
+        const { id } = req.params;
+        const { clothes } = req.body;
+
+        if(!!clothes && clothes.length==0){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Clothes array empty'
+            })
+        }
+
+        const updatedList = await List.findOneAndUpdate(
+        { _id: id, userId: uid }, req.body,
+        { returnDocument: 'after', runValidators: true }
+        ).populate("clothes", ["imagePath","title"]);
+
+        if (!updatedList) {
+        return res.status(404).json({
+            ok: false,
+            msg: "List item not found"
+        });
+        }
+
+        res.json({
+            ok: true,
+            lists: updatedList,
+            msg: "List successfully updated"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: "Error updating clothes item"
+        });
+    }
+});
+
+// delete single list
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const list = await List.findById(id);
+        if (!list || list.userId != req.uid) {
+        return res.status(400).json({
+            ok: false,
+            msg: "List not found or forbidden"
+        });
+        }
+
+        await List.findByIdAndDelete(id);
+
+        return res.json({
+            ok: true,
+            msg: "List deleted"
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "Error deleting list"
+        });
+    }
+});
 
 export default router;
