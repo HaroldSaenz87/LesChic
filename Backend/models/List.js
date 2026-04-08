@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { model, Schema } from "mongoose";
 
-const TagSchema = new Schema({
+const ListSchema = Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -8,14 +8,23 @@ const TagSchema = new Schema({
     },
     title: {
         type: String,
-        required: true,
-        trim: true
+        required: true
+    },
+    clothes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Clothes'
+    }],
+    lastUsed: {
+        type: Date,
+        required: true
+    },
+    plannedUsed: {
+        type: Date,
+        required: true
     }
 });
 
-TagSchema.index({ userId: 1, title: 1 }, { unique: true });
-
-TagSchema.set('toJSON', {
+ListSchema.set('toJSON', {
     transform: function (doc, ret) {
         delete ret.__v;
         ret.id = ret._id;
@@ -24,7 +33,7 @@ TagSchema.set('toJSON', {
     }
 });
 
-TagSchema.set('toObject', {
+ListSchema.set('toObject', {
     transform: function (doc, ret) {
         delete ret.__v;
         ret.id = ret._id;
@@ -33,4 +42,4 @@ TagSchema.set('toObject', {
     }
 });
 
-export default model("Tag", TagSchema);
+export default model('List', ListSchema);
