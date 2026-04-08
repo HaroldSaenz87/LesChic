@@ -58,41 +58,73 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: <Widget>[
-        Login(),
+        LoginForm(),
         Forgot(),
       ],
     );
   }
 }
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class LoginForm extends StatefulWidget{
+  const LoginForm({super.key});
 
-  void loginPressed(BuildContext context) {
-    showSnackBar(context, 'Login pressed');
-    Navigator.pushNamed(context, '/dashboard');
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm>{
+  final GlobalKey<FormState> _logFormKey = GlobalKey<FormState>();
+
+  void loginPressed()
+  {
+    if(_logFormKey.currentState!.validate()){
+      showSnackBar(context, 'Login Pressed (with valid input)');
+      Navigator.pushNamed(context, '/dashboard');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Username',
+    return Form(
+      key: _logFormKey,
+      child: Column(
+        children: <Widget>[
+          //email field
+          TextFormField(
+            decoration: InputDecoration(
+              icon: Icon(Icons.email),
+              labelText: 'Email',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              return null;
+            },
           ),
-        ),
-        TextField(
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'Password',
+
+          //password field
+          TextFormField(
+            obscureText: true,
+            decoration: InputDecoration(
+              icon: Icon(Icons.password),
+              labelText: 'Password',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              return null;
+            },
           ),
-        ),
-        FilledButton(
-          onPressed: () => loginPressed(context),
-          child: Text('Login'),
-        ),
-      ],
+
+          //login button
+          FilledButton(
+            onPressed: () => loginPressed(),
+            child: Text('Login'),
+          ),
+        ],
+      ),
     );
   }
 }
