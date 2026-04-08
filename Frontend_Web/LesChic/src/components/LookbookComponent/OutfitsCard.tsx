@@ -120,7 +120,7 @@ export const OutfitsCard = ({ lookbook, onClick, onDelete }: LookbookCardProps) 
             </div>
 
             {/* CARD  */}
-            <div className="px-4 py-3 flex flex-col gap-2">
+            <div className="px-4 py-3 flex flex-col gap-2 bg-accent">
                 
                 <p className="text-white font-display italic text-[23px] leading-tight truncate pr-10">
                     {lookbook.title || "Untitled Lookbook"}
@@ -136,7 +136,7 @@ export const OutfitsCard = ({ lookbook, onClick, onDelete }: LookbookCardProps) 
                         onClick={handleRemove}
                         className={`flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all duration-300 cursor-pointer ${
                             isConfirming 
-                            ? "bg-red-500/20 text-red-500 scale-105" 
+                            ? "text-red-500 scale-105" 
                             : "text-white/20 hover:text-red-500"
                         }`}
                     >
