@@ -1,22 +1,19 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
 async function sendEmail({ to, subject, html }) {
-    const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: process.env.MAIL_PORT,
-    secure: false,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-    },
-    });
-
-    await transporter.sendMail({
-        from: process.env.MAIL_FROM,
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
         to,
+        from: process.env.MAIL_FROM,
         subject,
-        html,
-    });
+        html
+    };
+
+    try {
+        await sgMail.send(msg)
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 export default sendEmail;
