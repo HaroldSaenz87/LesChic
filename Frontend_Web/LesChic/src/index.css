@@ -74,6 +74,17 @@
     scrollbar-width: none;  /* Firefox */
   }
 
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(1); /* Turns the default black icon into white */
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
 
   .stat-value {
     font-family: 'DM Mono', monospace;
