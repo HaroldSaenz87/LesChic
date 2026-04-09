@@ -209,7 +209,7 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
                                     key={cat}
                                     onClick={() => setSelectedType(cat)}
                                     className={`px-4 py-1.5 rounded-full border text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all ${
-                                        selectedType === cat ? "bg-white text-black border-white" : "bg-transparent text-white/40 border-white/10 hover:border-white hover:text-white hover:bg-white/5"
+                                        selectedType === cat ? "bg-secondary text-black border-secondary" : "bg-transparent text-white/40 border-white/10 hover:border-white hover:text-white hover:bg-white/5"
                                     }`}
                                 >
                                     {cat}
@@ -285,12 +285,12 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
                 {/* Footer */}
                 <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between bg-[#1a1a1a] shrink-0">
                     
-                    <button onClick={onClose} className="text-white/60 font-display text-sm uppercase tracking-widest hover:text-[red] transition-colors">Cancel</button>
+                    <button onClick={onClose} className="px-4 py-2 border border-red-600 bg-red-500 text-white font-display font-bold text-sm uppercase tracking-[0.2em] hover:bg-red-700 hover:border-red-700 transition-colors duration-300 rounded-xl cursor-pointer">Cancel</button>
                     
                     <button 
                         onClick={handleCreate} 
                         disabled={!title.trim() || selectedIds.length === 0 || saving} 
-                        className="flex items-center gap-2 bg-secondary text-black font-display text-sm uppercase tracking-widest px-5 py-2.5 rounded-xl disabled:opacity-30 hover:brightness-110 transition-all"
+                        className="flex items-center gap-2 bg-secondary text-black font-display text-sm uppercase tracking-widest px-5 py-2.5 rounded-xl disabled:opacity-30 hover:brightness-110 transition-all cursor-pointer"
                     >
                         {saving ? (<Loader2 size={12} className="animate-spin" />) : (isEditing ? <Check size={12} /> : <Plus size={12} />)}
                         {isEditing ? "Save Changes" : "Create Lookbook"}

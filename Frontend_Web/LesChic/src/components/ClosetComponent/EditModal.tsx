@@ -366,14 +366,14 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                         {/* Footer Actions */}
                         <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-white/10">
                             
-                            <button onClick={onClose} className="px-5 py-2.5 text-[12px] uppercase tracking-widest font-bold text-white/50 hover:text-red-500/80 transition-colors cursor-pointer">
+                            <button onClick={onClose} className="px-4 py-2 border border-red-600 bg-red-500 text-white font-display font-bold text-sm uppercase tracking-[0.2em] hover:bg-red-700 hover:border-red-700 transition-colors duration-300 rounded-xl cursor-pointer">
                                 Cancel
                             </button>
                             
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-white text-black rounded-xl text-[12px] uppercase tracking-widest font-bold hover:bg-white/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                className="flex items-center gap-2 bg-secondary text-black font-display text-sm uppercase tracking-widest px-5 py-2.5 rounded-xl disabled:opacity-30 hover:brightness-110 transition-all cursor-pointer"
                             >
                                 <Save size={18} />
                                 {saving ? "Saving..." : "Save Changes"}
