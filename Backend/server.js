@@ -8,6 +8,7 @@ import clothesRoutes from './routes/clothes.js';
 import tagsRoutes from './routes/tags.js'
 import listsRoutes from './routes/lists.js'
 
+// test
 dotenv.config({ path: '.env' });
 
 const app = express();
