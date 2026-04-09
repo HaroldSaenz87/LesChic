@@ -6,9 +6,9 @@ import { CheckCircle2, Circle } from 'lucide-react';
 
 export const Planner = () => {
     
-    const { lookbooks = [], fetchLookbooks } = useOutletContext<{ 
+    const { lookbooks = [] } = useOutletContext<{ 
         lookbooks: any[], 
-        fetchLookbooks: () => void 
+        //fetchLookbooks: () => void 
     }>();
 
     // Transform Lookbooks into FullCalendar "Events"
