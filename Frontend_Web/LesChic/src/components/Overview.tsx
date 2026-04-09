@@ -14,7 +14,7 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
     const navigate = useNavigate();
 
     return (
-        <div onClick={() => navigate(to)} className="flex flex-col gap-4 p-6 rounded-2xl bg-[#242424] border border-white/15 backdrop-blur-md cursor-pointer hover:bg-secondary/70 hover:border-white/30 transition-all duration-200 group">
+        <div onClick={() => navigate(to)} className="flex flex-col gap-4 p-6 rounded-r-2xl bg-[#242424] border border-white/35 border-l-4 border-l-secondary backdrop-blur-md cursor-pointer hover:bg-white/5 hover:border-white/40 hover:scale-[1.04] transition-all duration-200 group">
             
             
 

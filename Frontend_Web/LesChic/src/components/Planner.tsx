@@ -1,5 +1,6 @@
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useOutletContext } from 'react-router-dom';
 import { CheckCircle2, Circle } from 'lucide-react';
@@ -62,14 +63,15 @@ export const Planner = () => {
                 {/* The Calendar Container */}
                 <div className="full-calendar-container">
                     <FullCalendar
-                        plugins={[dayGridPlugin, interactionPlugin]}
+                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
+                        allDaySlot={false}
                         events={events}
                         eventContent={renderEventContent}
                         headerToolbar={{
-                            left: 'prev next today',
+                            start: 'prev today next',
                             center: 'title',
-                            right: ''
+                            end: 'dayGridMonth timeGridWeek timeGridDay'
                         }}
                         height="auto"
                     />
