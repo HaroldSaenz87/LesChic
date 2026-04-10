@@ -18,10 +18,10 @@ const ListSchema = Schema({
         type: Date,
         required: true
     },
-    plannedUsed: {
+    plannedUsed: [{
         type: Date,
         required: true
-    }
+    }]
 });
 
 ListSchema.set('toJSON', {

@@ -30,7 +30,6 @@ router.post("/", async(req, res) => {
 
         list.userId = uid;
         list.lastUsed = new Date(0)
-        list.plannedUsed = new Date(0)
         const newList = await list.save();
         await newList.populate("clothes", ["imagePath", "title"])
 
@@ -76,7 +75,7 @@ router.put("/:id", async (req, res) => {
         if(!!clothes && clothes.length==0){
             return res.status(400).json({
                 ok: false,
-                msg: 'Clothes array empty'
+                msg: 'List must have at least one item'
             })
         }
 
@@ -86,11 +85,13 @@ router.put("/:id", async (req, res) => {
         ).populate("clothes", ["imagePath","title"]);
 
         if (!updatedList) {
-        return res.status(404).json({
-            ok: false,
-            msg: "List item not found"
-        });
+            return res.status(404).json({
+                ok: false,
+                msg: "List item not found"
+            });
         }
+
+        //TODO: if lastUsed changed update also all clothes on the list
 
         res.json({
             ok: true,
@@ -101,7 +102,7 @@ router.put("/:id", async (req, res) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: "Error updating clothes item"
+            msg: "Error updating list item"
         });
     }
 });
