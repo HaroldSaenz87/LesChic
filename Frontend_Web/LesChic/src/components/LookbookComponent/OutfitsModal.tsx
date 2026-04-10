@@ -42,18 +42,24 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
 
         const types = allClothes.map(item => item.type);
         
-        return ["All", ...Array.from(new Set(types))];
+        return ["All", "Selected", ...Array.from(new Set(types))];
     
     }, [allClothes]);
 
     const filtered = allClothes.filter(item => {
+        const id = item._id || item.id;
         
-        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.type.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.type.toLowerCase().includes(searchQuery.toLowerCase());
 
-        const matchesType = selectedType === "All" || item.type === selectedType;
+        // NEW LOGIC: If 'Selected' is active, only show items whose ID is in selectedIds
+        const matchesType = selectedType === "All" 
+            ? true 
+            : selectedType === "Selected" 
+                ? selectedIds.includes(id) 
+                : item.type === selectedType;
 
         return matchesSearch && matchesType;
-
     });
 
 
@@ -204,17 +210,20 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
                         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                             
                             {categories.map(cat => (
-                                
                                 <button
                                     key={cat}
                                     onClick={() => setSelectedType(cat)}
-                                    className={`px-4 py-1.5 rounded-full border text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all ${
+                                    className={`px-4 py-1.5 rounded-full border text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all flex items-center gap-2 ${
                                         selectedType === cat ? "bg-secondary text-black border-secondary" : "bg-transparent text-white/40 border-white/10 hover:border-white hover:text-white hover:bg-white/5"
                                     }`}
                                 >
                                     {cat}
+                                    {cat === "Selected" && selectedIds.length > 0 && (
+                                        <span className={`ml-1 px-1.5 rounded-full ${selectedType === "Selected" ? "bg-black/20" : "bg-secondary/20 text-secondary"}`}>
+                                            {selectedIds.length}
+                                        </span>
+                                    )}
                                 </button>
-                            
                             ))}
 
                         </div>
