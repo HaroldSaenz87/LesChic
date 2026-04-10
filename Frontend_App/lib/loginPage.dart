@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'utils.dart'; //custom utils. here, used to print debug messages as SnackBar
+
+import 'package:http/http.dart' as http; //used to contact api
 
 import 'package:flutter/material.dart';
 
@@ -72,15 +77,62 @@ class LoginForm extends StatefulWidget{
   State<LoginForm> createState() => _LoginFormState();
 }
 
+class UserData {
+  final String uid;
+  final String name;
+  final String email;
+  final String token;
+
+  const UserData({required this.uid, required this.name, required this.email, required this.token});
+
+  factory UserData.fromJson(String json) {
+    Map<String, dynamic> _map = jsonDecode(json) as Map<String, dynamic>;
+
+    return switch (_map) {
+      {'uid': String uid, 'name': String name, 'email': String email, 'token': String token} => UserData (
+        uid: uid,
+        name: name,
+        email: email,
+        token: token,
+      ),
+      _ => throw const FormatException('Failed to log in.'),
+    };
+  }
+}
+
 class _LoginFormState extends State<LoginForm>{
   final GlobalKey<FormState> _logFormKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  void loginPressed()
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  //TODO: handle incorrect login!!! currently throws an exception and visually does nothing
+  void loginPressed() async
   {
     if(_logFormKey.currentState!.validate()){
-      showSnackBar(context, 'Login Pressed (with valid input)');
+      UserData _userData = await doLogin(_emailController.text, _passwordController.text);
+      showSnackBar(context, 'Logged in as ${_userData.name}');
       Navigator.pushNamed(context, '/dashboard');
     }
+  }
+
+  Future<UserData> doLogin(String email, String password) async {
+    Map<String, String> _loginInfo = {'email':email, 'password':password};
+    String _url = 'http://ec-albo.xyz:5000/api/auth/login';
+    final response = await http.post(
+      Uri.parse(_url),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json'
+      },
+      body: json.encode(_loginInfo)
+    );
+    return UserData.fromJson(response.body);
   }
 
   @override
@@ -91,6 +143,7 @@ class _LoginFormState extends State<LoginForm>{
         children: <Widget>[
           //email field
           TextFormField(
+            controller: _emailController,
             decoration: InputDecoration(
               icon: Icon(Icons.email),
               labelText: 'Email',
@@ -105,6 +158,7 @@ class _LoginFormState extends State<LoginForm>{
 
           //password field
           TextFormField(
+            controller: _passwordController,
             obscureText: true,
             decoration: InputDecoration(
               icon: Icon(Icons.password),
