@@ -204,12 +204,41 @@ class RegisterView extends StatefulWidget{
 
 class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _regFormKey = GlobalKey<FormState>();
+  final TextEditingController _firstController = TextEditingController();
+  final TextEditingController _lastController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  void registerPressed()
+  @override
+  void dispose() {
+    _firstController.dispose();
+    _lastController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void registerPressed() async
   {
     if (_regFormKey.currentState!.validate()){
-      showSnackBar(context, 'Create account pressed (with valid input)');
+      String result = await doRegister(_firstController.text, _lastController.text, _emailController.text, _passwordController.text);
+      showSnackBar(context, result);
     }
+  }
+
+  Future<String> doRegister(String name, String lastName, String email, String password) async
+  {
+    Map<String, String> _registerInfo = {'name':name, 'lastName':lastName, 'email':email, 'password':password};
+    String _url = 'http://ec-albo.xyz:5000/api/auth/register';
+    final response = await http.post(
+      Uri.parse(_url),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json'
+      },
+      body: json.encode(_registerInfo)
+    );
+    Map<String, dynamic> _map = jsonDecode(response.body) as Map<String, dynamic>;
+    return _map['msg'] ?? 'Error registering';
   }
 
   @override
@@ -220,6 +249,7 @@ class _RegisterViewState extends State<RegisterView> {
         children: <Widget>[
           //first name field
           TextFormField(
+            controller: _firstController,
             decoration: InputDecoration(
               icon: Icon(Icons.person),
               labelText: 'First',
@@ -234,6 +264,7 @@ class _RegisterViewState extends State<RegisterView> {
 
           //last name field
           TextFormField(
+            controller: _lastController,
             decoration: InputDecoration(
               icon: Icon(null),
               labelText: 'Last',
@@ -248,6 +279,7 @@ class _RegisterViewState extends State<RegisterView> {
 
           //email field
           TextFormField(
+            controller: _emailController,
             decoration: InputDecoration(
               icon: Icon(Icons.email),
               labelText: 'Email',
@@ -262,6 +294,7 @@ class _RegisterViewState extends State<RegisterView> {
 
           //password field
           TextFormField(
+            controller: _passwordController,
             obscureText: true,
             decoration: InputDecoration(
               icon: Icon(Icons.password),
