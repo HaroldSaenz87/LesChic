@@ -195,7 +195,6 @@
   }
  
   .fc .fc-daygrid-day:hover {
-    background-color: color-mix(in srgb, var(--color-surface) 20%, transparent) !important;
     cursor: cell;
   }
  
@@ -338,7 +337,60 @@
     border: 1px solid var(--color-accent) !important;
   }
 
-  
+  /* Ensures the internal calendar event container doesn't add awkward padding */
+  .fc-event-main {
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+  }
+
+  .fc-daygrid-event {
+      border-radius: 10px !important;
+      
+      margin-top: 4px !important;
+  }
+
+  /* This allows the scaled event to break out of the calendar cell boundaries */
+.fc-daygrid-event-harness {
+    overflow: visible !important;
+    z-index: 1;
+}
+
+/* Ensures when you hover, that specific day cell moves to the front */
+.fc-daygrid-event-harness:hover {
+    z-index: 50 !important;
+}
+
+/* Smooth out the scaling so it doesn't jitter over the borders */
+.fc-event {
+    transition: transform 0.2s ease-in-out !important;
+}
+
+.fc-daygrid-day-events {
+    overflow: visible !important;
+}
+
+/* Optional: Make the text even crisper for dark mode architecture aesthetics */
+.fc-event span {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Strip FullCalendar default colors so our Tailwind buttons take over */
+.fc-v-event, .fc-h-event {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.fc-event-main {
+    color: inherit !important;
+}
+
+.fc-event-main span {
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    letter-spacing: 0.12em;
+}
 
 
 }

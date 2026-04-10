@@ -71,7 +71,7 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
     
     return (
         <>
-            <div className="min-w-64 h-80 bg-accent rounded-2xl overflow-hidden border border-white/15 snap-center transition-all hover:border-white/90 hover:bg-black/60 group/card">
+            <div className="min-w-64 h-80 bg-accent rounded-2xl overflow-hidden border border-white/15 snap-center transition-all hover:border-white/90 hover:bg-black/60 cursor-pointer group/card">
                 
                 {/* Image Container - Keep h-3/5 as requested */}
                 <div className="relative w-full h-3/5">
