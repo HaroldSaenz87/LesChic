@@ -88,33 +88,35 @@ export const OutfitsCard = ({ lookbook, onClick, onDelete }: LookbookCardProps) 
                 </div>
 
                 {/* The actual thumbnail */}
-                <div className="grid grid-cols-3 gap-0.5 p-0.5 h-full">
+                {/* but updated from grid to flex to fill space dynamically */}
+                <div className="flex gap-0.5 p-0.5 h-full w-full">
                     
                     {preview.map((item, i) => (
-                        
                         <div
                             key={item._id || i}
-                            className="relative bg-[#333] rounded-sm overflow-hidden"
-                            style={{ gridRow: i === 0 ? "span 2" : "span 1" }}
+                            /* flex-1 ensures every image grows to fill the horizontal space */
+                            className="relative flex-1 bg-[#333] overflow-hidden first:rounded-l-xl last:rounded-r-xl"
                         >
                             {item.imagePath ? (
-                                <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover" />
+                                <img 
+                                    src={item.imagePath} 
+                                    alt={item.title} 
+                                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" 
+                                />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center">
                                     <BookOpen size={16} className="text-white/20" />
                                 </div>
                             )}
                         </div>
-                    
                     ))}
                     
+                    {/* Overflow indicator sits at the end if there are more than 5 items */}
                     {overflow > 0 && (
-                        
-                        <div className="bg-[#2a2a2a] rounded-sm flex items-center justify-center">
-                            <span className="font-display text-xs text-white/30">+{overflow}</span>
+                        <div className="bg-[#2a2a2a] w-12 flex items-center justify-center rounded-r-xl border-l border-white/5">
+                            <span className="stat-value text-[20px] text-white/80">+{overflow}</span>
                         </div>
                     )}
-                
                 </div>
             
             </div>

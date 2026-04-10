@@ -142,10 +142,11 @@ export const Planner = () => {
                     e.stopPropagation();
                     setLookbookToRemove(lb);
                 }}
+
                 /* origin-center: Ensures it grows outward from the middle.
-                hover:scale-105: A gentler pop (5% instead of 10%) to stay within bounds.
-                z-50: Ensures that while hovering, it sits ABOVE all other grid lines.
+                    Ensures that while hovering, it sits ABOVE all other grid lines.
                 */
+
                 className={`flex items-center justify-center w-full p-1 rounded-md transition-all duration-300 cursor-pointer relative z-10 hover:z-50 hover:scale-105 origin-center shadow-sm border backdrop-blur-md ${
                     isUsed 
                         ? "bg-green-400/50! text-white border-green-400/50 hover:brightness-125 hover:shadow-green-500/30" 
@@ -223,11 +224,19 @@ export const Planner = () => {
                     
                     <div className="relative bg-[#1a1a1a] border border-white/10 rounded-2xl max-w-sm w-full shadow-2xl animate-fade-in2 overflow-hidden">
                         
-                        {/* 5-Piece Image Preview Grid (Matching OutfitsCard style) */}
-                        <div className="h-36 bg-accent/20 grid grid-cols-5 gap-0.5 p-0.5 border-b border-white/10">
+                        {/* Piece Image Preview Grid (Matching OutfitsCard style) */}
+                        <div className="h-36 bg-accent/20 flex gap-0.5 p-0.5 border-b border-white/10">
                             {lookbookToRemove.clothes.slice(0, 5).map((item: any, i: number) => (
-                                <div key={i} className="bg-[#242424] overflow-hidden">
-                                    <img src={item.imagePath} alt="" className="w-full h-full object-cover opacity-80" />
+                                <div 
+                                    key={i} 
+                                    /* flex-1 makes each item grow to fill available space equally */
+                                    className="flex-1 bg-[#242424] overflow-hidden first:rounded-l-xl last:rounded-r-xl"
+                                >
+                                    <img 
+                                        src={item.imagePath} 
+                                        alt="" 
+                                        className="w-full h-full object-cover opacity-80" 
+                                    />
                                 </div>
                             ))}
                         </div>
