@@ -313,7 +313,7 @@ export const MyCloset = () => {
                            
                             <div className="relative w-full bg-black/40 shrink-0 flex items-center justify-center">
                                 <img 
-                                    src={selectedImage} 
+                                    src={`http://www.ec-albo.xyz:5000${selectedImage}`}
                                     alt="Full View" 
                                     className="max-h-[80vh] w-full object-contain opacity-90" 
                                 />
