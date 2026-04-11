@@ -30,6 +30,20 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
+class AddClothesScreen extends StatefulWidget {
+  const AddClothesScreen({super.key});
+
+  @override
+  State<AddClothesScreen> createState() => _AddClothesScreenState();
+}
+
+class _AddClothesScreenState extends State<AddClothesScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder();
+  }
+}
+
 class DashboardNavBar extends StatelessWidget {
   const DashboardNavBar ({super.key});
 
