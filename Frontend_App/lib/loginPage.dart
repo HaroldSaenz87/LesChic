@@ -121,7 +121,7 @@ class _LoginFormState extends State<LoginForm>{
         UserData _userData = await doLogin(_emailController.text, _passwordController.text);
         message = 'Logged in as ${_userData.name}';
         
-        Navigator.pushNamed(context, '/dashboard');
+        Navigator.pushReplacementNamed(context, '/dashboard');
       }
       catch (e) {
         message = 'Failed to log in';

@@ -15,13 +15,13 @@ class DashboardPage extends StatelessWidget {
         children: [
           //log out button
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/'),
             child: const Text('Log out'),
           ),
 
           //add clothes button
           ElevatedButton(
-            onPressed: () => showSnackBar(context, 'Add clothes pressed'),
+            onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
             child: const Text('Add clothes'),
           ),
         ],
