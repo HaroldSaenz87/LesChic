@@ -319,7 +319,7 @@ export const MyCloset = () => {
                                 />
                                 
                                 {/* Bottom gradient/info bar similar to the EditModal sidebar */}
-                                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent" />
+                                <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/80 to-transparent" />
                                 
                                 <div className="absolute bottom-6 left-8">
                                     <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-white/50">
