@@ -142,16 +142,14 @@ export const Planner = () => {
     const renderEventContent = (eventInfo: any) => {
 
         const lb = eventInfo.event.extendedProps;
-        
-        // Create Date objects for comparison
-        const eventDate = new Date(lb.currentEventDate);
-        const today = new Date();
-        
-        // Set hours to 0 to compare only the calendar day
-        eventDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
 
-        // If the event date is today or in the past, it's "Worn"
+        const dateStr = lb.currentEventDate.split('T')[0];
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const eventDate = new Date(year, month - 1, day); // local midnight
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+ 
+        // An outfit is "worn" only if its date is strictly before today
         const isUsed = eventDate < today;
 
         return (
@@ -281,8 +279,8 @@ export const Planner = () => {
                                 {lookbookToRemove.title}
                             </h3>
                             
-                            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] mb-8">
-                                Scheduled for {new Date(lookbookToRemove.plannedUsed).toLocaleDateString()}
+                            <p className="text-white/40 text-[12px] uppercase tracking-[0.2em] mb-8">
+                                Scheduled for {new Date(lookbookToRemove.currentEventDate).toLocaleDateString()}
                             </p>
                             
                             <div className="flex flex-col items-center gap-3">

@@ -59,6 +59,9 @@ export const Overview = () => {
         return new Date(date).toISOString().split('T')[0];
     };
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const totalPlannedEvents = lookbooks.reduce((acc, lb) => {
         
         const dates = Array.isArray(lb.plannedUsed) ? lb.plannedUsed : [lb.plannedUsed];
@@ -71,14 +74,14 @@ export const Overview = () => {
     const totalWornEvents = lookbooks.reduce((acc, lb) => {
         
         const dates = Array.isArray(lb.plannedUsed) ? lb.plannedUsed : [lb.plannedUsed];
-        const lastUsedStr = toDateString(lb.lastUsed);
         
-        // Count how many planned dates match the lastUsed date string
+        // Mirror Planner.tsx logic: an event is "worn" if its date is strictly before today
         const wornDates = dates.filter((d: any) => {
-            
             const plannedStr = toDateString(d);
-            
-            return plannedStr !== null && plannedStr === lastUsedStr;
+            if (!plannedStr) return false;
+            const [year, month, day] = plannedStr.split('-').map(Number);
+            const eventDate = new Date(year, month - 1, day); // local midnight
+            return eventDate < today;
         });
         
         return acc + wornDates.length;
