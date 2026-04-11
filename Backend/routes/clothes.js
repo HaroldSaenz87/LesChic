@@ -5,6 +5,7 @@
 import { Router } from 'express';
 
 import Clothes from '../models/Clothes.js';
+import List from '../models/List.js';
 import { jwtValidator } from '../middlewares/jwt-validator.js';
 import { uploadImage } from '../utils/uploadImage.js';
 import { deleteImage } from '../utils/deleteImage.js';
@@ -142,8 +143,11 @@ router.delete("/:id", async (req, res) => {
         // delete referenced image
         deleteImage(deleted.imagePath);
 
-        // FIXME: FUTURE IMPLEMENT
         // Make sure to update existing lists
+        await List.updateMany(
+            { clothes: id },
+            { $pull: { clothes: id } }
+        );
 
         res.json({
             ok: true,
