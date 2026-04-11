@@ -1,6 +1,9 @@
 import 'package:closet/utils.dart';
 import 'package:flutter/material.dart';
 
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -38,9 +41,58 @@ class AddClothesScreen extends StatefulWidget {
 }
 
 class _AddClothesScreenState extends State<AddClothesScreen> {
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _takePhoto() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _choosePhoto() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Create Clothing Item'),),
+      body: Center(
+        child: (_image != null) ? Image.file(_image!) : Text('No image selected'),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          //take new photo
+          FloatingActionButton(
+            heroTag: 'camera',
+            onPressed: _takePhoto,
+            child: Icon(Icons.photo_camera),
+          ),
+
+          //spacer
+          SizedBox(height: 10,),
+          
+          //choose from gallery
+          FloatingActionButton(
+            heroTag: 'gallery',
+            onPressed: _choosePhoto,
+            child: Icon(Icons.photo_library),
+          ),
+        ],
+      ),
+    );
   }
 }
 
