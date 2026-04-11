@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react"
-import { Loader2 } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react"
+import { Loader2, X } from "lucide-react";
 import { buildPath } from "../utils/buildPath";
 
 import { ClosetFilters } from "../components/ClosetComponent/ClosetFilters";
@@ -32,13 +32,20 @@ export const MyCloset = () => {
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("User");
 
+    const overlayRef = useRef<HTMLDivElement>(null);
+
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const closeModal = () => setSelectedImage(null);
+
     // Filter & Search State
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-    // 1. Define fetchAllTags FIRST so it is available to the rest of the component
+
+    // Define fetchAllTags FIRST so it is available to the rest of the component
     const fetchAllTags = useCallback(async () => {
         const storedUser = sessionStorage.getItem("user_data");
         const token = storedUser ? JSON.parse(storedUser).token : "";
@@ -62,6 +69,7 @@ export const MyCloset = () => {
 
     // Logic: Filtering
     const filteredClothes = clothes.filter((item) => {
+        
         const searchLower = searchQuery.toLowerCase();
         const matchesSearch = 
             item.title.toLowerCase().includes(searchLower) || 
@@ -211,59 +219,125 @@ export const MyCloset = () => {
     }
 
     return (
-        <div className="flex flex-col gap-8 mt-8 animate-fade-in animation-delay-200">
-            <div className="flex flex-col gap-6 bg-[#1a1a1a]/85 border border-white/10 rounded-2xl px-8 py-6 backdrop-blur-md">
-                <div className="flex flex-col gap-1">
-                    <h1 className="text-white font-display font-bold text-3xl uppercase tracking-widest">
-                        My Closet
-                    </h1>
-                    <p className="text-white/60 text-sm uppercase tracking-widest mt-1">
-                        Tailored for <span className="text-white font-bold">{userName}</span>
-                    </p>
+
+        <>
+            <div className="flex flex-col gap-8 mt-8 animate-fade-in animation-delay-200">
+                
+                <div className="flex flex-col gap-6 bg-[#1a1a1a]/85 border border-white/10 rounded-2xl px-8 py-6 backdrop-blur-md">
+                    
+                    <div className="flex flex-col gap-1">
+                        
+                        <h1 className="text-white font-display font-bold text-3xl uppercase tracking-widest">
+                            My Closet
+                        </h1>
+                        
+                        <p className="text-white/60 text-sm uppercase tracking-widest mt-1">
+                            Tailored for <span className="text-white font-bold">{userName}</span>
+                        </p>
+                    </div>
+
+                    <ClosetFilters 
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        categories={uniqueTypes}
+                        selectedCat={selectedTypes}
+                        onToggleCategory={toggleType}
+                        brands={uniqueBrands}
+                        selectedBrands={selectedBrands}
+                        onToggleBrand={toggleBrand}
+                        tags={uniqueTags}
+                        selectedTags={selectedTags}
+                        onToggleTag={toggleTag}
+                        onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([])}}
+                    />
+
+                    <div className="mt-4">
+                        
+                        {clothes.length > 0 ? (
+                            uniqueTypes.map((type) => {
+                                const typeItems = filteredClothes.filter(item => item.type === type);
+                                if (typeItems.length === 0) return null;
+
+                                return (
+                                    <ClosetRow 
+                                        key={type} 
+                                        title={type} 
+                                        items={typeItems}
+                                        allTags={userTags}
+                                        onUpdate={handleUpdate}
+                                        onDelete={handleDelete}
+                                        onTagCreated={fetchAllTags} 
+                                        onImageClick={(path) => setSelectedImage(path)}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <div className="w-full py-20 text-center border-2 border-dashed border-white/20 rounded-2xl bg-black/20">
+                                
+                                <p className="text-white/60 font-display text-lg uppercase tracking-widest">
+                                    Your closet is empty
+                                </p>
+                            
+                            </div>
+                        )}
+
+                    </div>
+
                 </div>
 
-                <ClosetFilters 
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    categories={uniqueTypes}
-                    selectedCat={selectedTypes}
-                    onToggleCategory={toggleType}
-                    brands={uniqueBrands}
-                    selectedBrands={selectedBrands}
-                    onToggleBrand={toggleBrand}
-                    tags={uniqueTags}
-                    selectedTags={selectedTags}
-                    onToggleTag={toggleTag}
-                    onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([])}}
-                />
 
-                <div className="mt-4">
-                    {clothes.length > 0 ? (
-                        uniqueTypes.map((type) => {
-                            const typeItems = filteredClothes.filter(item => item.type === type);
-                            if (typeItems.length === 0) return null;
-
-                            return (
-                                <ClosetRow 
-                                    key={type} 
-                                    title={type} 
-                                    items={typeItems}
-                                    allTags={userTags}
-                                    onUpdate={handleUpdate}
-                                    onDelete={handleDelete}
-                                    onTagCreated={fetchAllTags} 
-                                />
-                            );
-                        })
-                    ) : (
-                        <div className="w-full py-20 text-center border-2 border-dashed border-white/20 rounded-2xl bg-black/20">
-                            <p className="text-white/60 font-display text-lg uppercase tracking-widest">
-                                Your closet is empty
-                            </p>
-                        </div>
-                    )}
-                </div>
             </div>
-        </div>
+
+            {/* Full Image Lightbox matches modal Style */}
+            {selectedImage && (
+                
+                <div 
+                    ref={overlayRef} // Ensure you have an overlayRef or use a simple onClick
+                    onClick={closeModal}
+                    className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+                >
+                    
+                    <div 
+                        className="relative w-full max-w-3xl bg-[#111111] border border-white/50 rounded-2xl shadow-2xl overflow-hidden animate-fade-in2 zoom-in-95"
+                        onClick={(e) => e.stopPropagation()} 
+                    >
+                        {/* Close button matches the EditModal position and style */}
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-[red] hover:bg-white/10 transition-all cursor-pointer"
+                        >
+                            <X size={16} />
+                        </button>
+
+                        <div className="flex flex-col">
+                           
+                            <div className="relative w-full bg-black/40 shrink-0 flex items-center justify-center">
+                                <img 
+                                    src={selectedImage} 
+                                    alt="Full View" 
+                                    className="max-h-[80vh] w-full object-contain opacity-90" 
+                                />
+                                
+                                {/* Bottom gradient/info bar similar to the EditModal sidebar */}
+                                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent" />
+                                
+                                <div className="absolute bottom-6 left-8">
+                                    <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-white/50">
+                                        Viewing Item Image
+                                    </p>
+                                </div>
+                            
+                            </div>
+                        
+                        </div>
+                    
+                    </div>
+                
+                </div>
+
+            )}
+
+        </>
+
     );
 }

@@ -28,9 +28,10 @@ interface ClothingCardProps {
     onSave?: (id: string, data: Partial<ClothingItem>) => Promise<void>;
     onDelete?: (id: string) => void;
     onTagCreated: () => Promise<void>;
+    onImageClick: (path: string) => void;
 }
 
-export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreated }: ClothingCardProps) => {
+export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreated, onImageClick }: ClothingCardProps) => {
     
     const [showMenu, setShowMenu] = useState(false);
 
@@ -71,7 +72,7 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
     
     return (
         <>
-            <div className="min-w-64 h-80 bg-accent rounded-2xl overflow-hidden border border-white/15 snap-center transition-all hover:border-white/90 hover:bg-black/60 cursor-pointer group/card">
+            <div onClick={() => onImageClick(item.imagePath)} className="min-w-64 h-80 bg-accent rounded-2xl overflow-hidden border border-white/15 snap-center transition-all hover:border-white/90 hover:bg-black/60 cursor-pointer group/card">
                 
                 {/* Image Container - Keep h-3/5 as requested */}
                 <div className="relative w-full h-3/5">
