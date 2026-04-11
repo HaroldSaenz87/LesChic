@@ -1,3 +1,4 @@
+import 'package:closet/utils.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -10,11 +11,20 @@ class DashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Log out'),
-        ),
+      body: Column(
+        children: [
+          //log out button
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Log out'),
+          ),
+
+          //add clothes button
+          ElevatedButton(
+            onPressed: () => showSnackBar(context, 'Add clothes pressed'),
+            child: const Text('Add clothes'),
+          ),
+        ],
       ),
     );
   }
