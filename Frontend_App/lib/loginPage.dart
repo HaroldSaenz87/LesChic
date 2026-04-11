@@ -112,13 +112,23 @@ class _LoginFormState extends State<LoginForm>{
     super.dispose();
   }
 
-  //TODO: handle incorrect login!!! currently throws an exception and visually does nothing
+  //TODO: handle incorrect login!!! currently shows generic failure message
   void loginPressed() async
   {
+    String message;
     if(_logFormKey.currentState!.validate()){
-      UserData _userData = await doLogin(_emailController.text, _passwordController.text);
-      showSnackBar(context, 'Logged in as ${_userData.name}');
-      Navigator.pushNamed(context, '/dashboard');
+      try {
+        UserData _userData = await doLogin(_emailController.text, _passwordController.text);
+        message = 'Logged in as ${_userData.name}';
+        
+        Navigator.pushNamed(context, '/dashboard');
+      }
+      catch (e) {
+        message = 'Failed to log in';
+      }
+      showSnackBar(context, message);
+
+      
     }
   }
 
