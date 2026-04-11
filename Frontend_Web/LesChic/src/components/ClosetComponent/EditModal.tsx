@@ -191,7 +191,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                     {/* Left: Image Sidebar */}
                     <div className="relative md:w-2/5 h-56 md:h-auto bg-black/40 shrink-0">
                         
-                        <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover opacity-80" />
+                        <img src={`http://www.ec-albo.xyz:5000${item.imagePath}`} alt={item.title} className="w-full h-full object-cover opacity-80" />
                         
                         <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/60 to-transparent" />
                         

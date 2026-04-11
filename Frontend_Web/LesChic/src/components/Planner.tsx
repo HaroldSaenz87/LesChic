@@ -267,7 +267,7 @@ export const Planner = () => {
                                     className="flex-1 bg-[#242424] overflow-hidden first:rounded-l-xl last:rounded-r-xl"
                                 >
                                     <img 
-                                        src={item.imagePath} 
+                                        src={`http://www.ec-albo.xyz:5000${item.imagePath}`}
                                         alt="" 
                                         className="w-full h-full object-cover opacity-80" 
                                     />

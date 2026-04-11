@@ -78,7 +78,7 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
                 <div className="relative w-full h-3/5">
 
                     <img 
-                        src={item.imagePath} 
+                        src={`http://www.ec-albo.xyz:5000${item.imagePath}`}
                         alt={item.title} 
                         className="w-full h-full object-cover opacity-90 group-hover/card:opacity-100 transition-opacity" 
                     />

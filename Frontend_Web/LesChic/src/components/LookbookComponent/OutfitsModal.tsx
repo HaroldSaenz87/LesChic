@@ -174,7 +174,7 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
                                             onClick={() => toggle(item._id || item.id)}
                                             className="relative group w-12 h-12 shrink-0 rounded-lg overflow-hidden border border-white/20 cursor-pointer hover:border-red-500 transition-all"
                                         >
-                                            <img src={item.imagePath} className="w-full h-full object-cover" alt="Selected" />
+                                            <img src={`http://www.ec-albo.xyz:5000${item.imagePath}`} className="w-full h-full object-cover" alt="Selected" />
                                             
                                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                                 <X size={12} className="text-white" />
@@ -253,7 +253,7 @@ export const OutfitsModal = ({ allClothes, onClose, onCreated, initialData }: Cr
                                     }`}
                                 >
                                     {item.imagePath ? (
-                                        <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover" />
+                                        <img src={`http://www.ec-albo.xyz:5000${item.imagePath}`} alt={item.title} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full bg-[#333] flex items-center justify-center">
                                             <Shirt size={20} className="text-white/10" />

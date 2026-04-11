@@ -96,7 +96,7 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                                                 >
                                                     {item.imagePath ? (
                                                         <img 
-                                                            src={item.imagePath} 
+                                                            src={`http://www.ec-albo.xyz:5000${item.imagePath}`}
                                                             alt={item.title} 
                                                             className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" 
                                                         />
