@@ -51,6 +51,40 @@ export const Overview = () => {
 
     const { clothes = [], lookbooks = [] } = useOutletContext<{ clothes: any[], lookbooks: any[] }>();
 
+
+    const toDateString = (date: any) => {
+
+        if (!date || date === '1970-01-01T00:00:00.000Z') return null;
+        
+        return new Date(date).toISOString().split('T')[0];
+    };
+
+    const totalPlannedEvents = lookbooks.reduce((acc, lb) => {
+        
+        const dates = Array.isArray(lb.plannedUsed) ? lb.plannedUsed : [lb.plannedUsed];
+        const validDates = dates.filter((d: any) => toDateString(d) !== null);
+        
+        return acc + validDates.length;
+    
+    }, 0);
+
+    const totalWornEvents = lookbooks.reduce((acc, lb) => {
+        
+        const dates = Array.isArray(lb.plannedUsed) ? lb.plannedUsed : [lb.plannedUsed];
+        const lastUsedStr = toDateString(lb.lastUsed);
+        
+        // Count how many planned dates match the lastUsed date string
+        const wornDates = dates.filter((d: any) => {
+            
+            const plannedStr = toDateString(d);
+            
+            return plannedStr !== null && plannedStr === lastUsedStr;
+        });
+        
+        return acc + wornDates.length;
+    
+    }, 0);
+
     // Read user name from sessionStorage set at login
     const user = JSON.parse(sessionStorage.getItem("user_data") || "{}");
     
@@ -58,7 +92,7 @@ export const Overview = () => {
     const stats = [
         { icon: <Shirt size={20} />, label: "Closet Items", count: clothes.length, to: "/dashboard/closet" },
         { icon: <List size={20} />, label: "Lookbooks", count: lookbooks.length, to: "/dashboard/lookbooks" },
-        { icon: <Calendar size={20} />, label: "Planned Outfits", count: 0, to: "/dashboard/planner" },
+        { icon: <Calendar size={20} />, label: "Planned Outfits", count: totalPlannedEvents, to: "/dashboard/planner" },
     ];
 
     return(
@@ -109,8 +143,9 @@ export const Overview = () => {
             <div className="animate-fade-in animation-delay-600">
 
                 <div className="flex flex-col gap-5 bg-[#1A1A1A]/85 border border-white/10 rounded-2xl px-8 py-6">
+                    
                     {/* planned/used will be replaced with real API later */}
-                    <OutfitChart planned={10} used={4} />
+                    <OutfitChart planned={totalPlannedEvents} used={totalWornEvents} />
 
                 </div>
 

@@ -43,11 +43,11 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                 <div className="flex justify-between items-start p-8 pb-4">
                     
                     <div>
-                        <h2 className="text-white font-display text-2xl uppercase tracking-widest">Plan Ensemble</h2>
-                        <p className="text-white/40 text-xs uppercase tracking-widest mt-1">Select a look and set the schedule</p>
+                        <h2 className="text-white font-display text-2xl uppercase tracking-widest">Plan Outfits</h2>
+                        <p className="text-white/40 text-sm uppercase tracking-widest mt-1">Because walking into the room is an art form, not an accident.</p>
                     </div>
                     
-                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-white/40 hover:text-[red] transition-colors">
                         <X size={24} />
                     </button>
                 
@@ -68,8 +68,16 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                                 
                                 <button
                                     key={lb._id || lb.id}
-                                    onClick={() => setTempSelection(lb)}
-                                    className={`flex flex-col bg-[#242424] border rounded-2xl overflow-hidden transition-all duration-300 group relative text-left ${
+                                    onClick={() => {
+                                        // If clicking the one already selected, deselect it
+                                        if (isSelected) {
+                                            setTempSelection(null);
+                                        } else {
+                                            setTempSelection(lb);
+                                        }
+                                    }}
+                                    
+                                    className={`flex flex-col bg-[#242424] border rounded-2xl overflow-hidden transition-all duration-300 group relative text-left cursor-pointer ${
                                         isSelected 
                                         ? 'border-secondary ring-2 ring-secondary' 
                                         : 'border-white/10 hover:border-white/30 hover:bg-[#2a2a2a]'
@@ -78,16 +86,20 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                                     {/* Thumbnail Grid - Matches OutfitsCard */}
                                     <div className="relative h-36 border-b border-white/5 overflow-hidden">
                                         
-                                        <div className="grid grid-cols-3 gap-0.5 p-0.5 h-full">
+                                        <div className="flex h-full w-full gap-px"> {/* gap-px provides a tiny elegant divider, use gap-0 for none */}
                                             
                                             {preview.map((item: any, i: number) => (
                                                 <div
                                                     key={item._id || i}
-                                                    className="relative bg-[#333] rounded-sm overflow-hidden"
-                                                    style={{ gridRow: i === 0 ? "span 2" : "span 1" }}
+                                                    /* flex-1 ensures every image takes an equal portion of the width */
+                                                    className="flex-1 bg-[#333] overflow-hidden relative"
                                                 >
                                                     {item.imagePath ? (
-                                                        <img src={item.imagePath} alt={item.title} className="w-full h-full object-cover" />
+                                                        <img 
+                                                            src={item.imagePath} 
+                                                            alt={item.title} 
+                                                            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" 
+                                                        />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center">
                                                             <BookOpen size={16} className="text-white/20" />
@@ -95,21 +107,20 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                                                     )}
                                                 </div>
                                             ))}
+
                                             {overflow > 0 && (
-                                                <div className="bg-[#2a2a2a] rounded-sm flex items-center justify-center">
-                                                    <span className="font-display text-xs text-white/30">+{overflow}</span>
+                                                <div className="w-12 bg-[#2a2a2a] flex items-center justify-center border-l border-white/10">
+                                                    <span className=" stat-value text-[20px] text-white/80">+{overflow}</span>
                                                 </div>
                                             )}
 
                                         </div>
 
                                         {isSelected && (
-                                            <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center backdrop-blur-[1px]">
-                                                
-                                                <div className="bg-[lightgreen] text-black p-2 rounded-full shadow-xl">
+                                            <div className="absolute inset-0 bg-secondary/20 flex items-center justify-center backdrop-blur-[1px] z-10">
+                                                <div className="bg-[lightgreen] text-black p-2 rounded-full shadow-xl animate-scale-in">
                                                     <Check size={20} />
                                                 </div>
-                                            
                                             </div>
                                         )}
 
@@ -181,10 +192,13 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center text-white/20 text-xs uppercase text-center italic space-y-4 py-20">
-                                <div className="p-4 border border-dashed border-white/10 rounded-full">
-                                    <Check size={24} className="opacity-10" />
+                                
+                                <div className="p-4 border border-dashed border-white/30 rounded-full">
+                                    <Check size={24} className="opacity-70" />
                                 </div>
+                                
                                 <p>Select a lookbook <br/> to schedule</p>
+                            
                             </div>
                         )}
 
@@ -196,8 +210,8 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                 {/* Footer */}
                 <div className="px-8 py-4 border-t border-white/5 flex justify-start bg-[#1a1a1a]">
                     
-                    <button onClick={onClose} className="text-white/30 hover:text-red-400 text-[10px] uppercase tracking-[0.2em] transition-colors">
-                        Abandon Selection
+                    <button onClick={onClose} className="px-4 py-2 border border-red-600 bg-red-500 text-white font-display font-bold text-sm uppercase tracking-[0.2em] hover:bg-red-700 hover:border-red-700 transition-colors duration-300 rounded-xl cursor-pointer">
+                        Cancel
                     </button>
                 
                 </div>
@@ -205,7 +219,7 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
             </div>
         
         </div>
-        
+
     );
     
 };

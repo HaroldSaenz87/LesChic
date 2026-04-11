@@ -200,11 +200,11 @@ export const Planner = () => {
                         <div className="flex flex-col gap-1">
                             
                             <h1 className="text-white font-display font-bold text-3xl uppercase tracking-widest">
-                                The Schedule
+                                The Visual Agenda
                             </h1>
                             
                             <p className="text-white/60 text-sm uppercase tracking-widest mt-1">
-                                Strategizing the ensemble architecture
+                                Scheduling your arrivals so every entrance feels personal
                             </p>
                         
                         </div>
