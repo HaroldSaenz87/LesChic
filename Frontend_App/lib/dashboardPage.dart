@@ -45,6 +45,25 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   final ImagePicker _picker = ImagePicker();
   double MAX_IMAGE_DIMENSION = 1024;
 
+  final GlobalKey<FormState> _clothesFormKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _sizeController = TextEditingController();
+  final TextEditingController _typeController = TextEditingController();
+  final TextEditingController _paletteController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _tagsController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _sizeController.dispose();
+    _typeController.dispose();
+    _paletteController.dispose();
+    _brandController.dispose();
+    _tagsController.dispose();
+    super.dispose();
+  }
+
   Future<void> _takePhoto() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera, maxHeight: MAX_IMAGE_DIMENSION, maxWidth: MAX_IMAGE_DIMENSION);
 
@@ -65,12 +84,21 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     }
   }
 
-  void _submitClothes(File? image) async {
+  void _submitClothes() async {
     //showSnackBar(context, 'submit clothes pressed');
     var storage = StorageService();
     UserData? user = await storage.getUserData();
     if (user == null) return;
-    String result = await doCreateClothes(user.token, 'TestItem', 'size', 'type', 'palette', image: image);
+    String result = await doCreateClothes(
+      user.token,
+      _titleController.text,
+      _sizeController.text,
+      _typeController.text,
+      _paletteController.text,
+      brand: _brandController.text,
+      //tags: _tagsController.text, TODO figure out how to send tags
+      image: _image
+    );
     showSnackBar(context, result);
   }
 
@@ -78,8 +106,78 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Clothing Item'),),
-      body: Center(
-        child: (_image != null) ? Image.file(_image!) : Text('No image selected'),
+      body: Column(
+        children: [
+          (_image != null)
+            ? Image.file(_image!, fit: BoxFit.fitHeight, height: 400.0) //TODO display image some way ot her than a force size (parallax would be cool)
+            : Text('No image selected'),
+          Form(
+            key: _clothesFormKey,
+            child: Column(
+              children: [
+                //title field
+                TextFormField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: 'Title *'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+
+                //size field
+                TextFormField(
+                  controller: _sizeController,
+                  decoration: InputDecoration(labelText: 'Size *'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a size';
+                    }
+                    return null;
+                  },
+                ),
+
+                //type field
+                TextFormField(
+                  controller: _typeController,
+                  decoration: InputDecoration(labelText: 'Type *'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a type';
+                    }
+                    return null;
+                  },
+                ),
+
+                //palette field
+                TextFormField(
+                  controller: _paletteController,
+                  decoration: InputDecoration(labelText: 'Palette *'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a palette';
+                    }
+                    return null;
+                  },
+                ),
+
+                //brand field (optional)
+                TextFormField(
+                  controller: _brandController,
+                  decoration: InputDecoration(labelText: 'Brand'),
+                ),
+
+                //tags field (optional)
+                TextFormField(
+                  controller: _tagsController,
+                  decoration: InputDecoration(labelText: 'Tags'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -107,7 +205,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
           //submit clothes
           FloatingActionButton(
             heroTag: 'submit',
-            onPressed: () => _submitClothes(_image),
+            onPressed: _submitClothes,
             child: Icon(Icons.add),
           ),
         ],
