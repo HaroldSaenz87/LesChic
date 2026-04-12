@@ -93,7 +93,7 @@ export const Lookbooks = () => {
             // compare the MongoDB _id strings
             const idA = a?._id|| a?.id || "";
             const idB = b?._id || b?.id || "";
-            console.log("Comparing:", idA, "with", idB);
+            //console.log("Comparing:", idA, "with", idB);
             return idB.localeCompare(idA)
         }
         return 0;

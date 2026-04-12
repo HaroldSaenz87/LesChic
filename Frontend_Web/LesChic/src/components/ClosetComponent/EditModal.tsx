@@ -37,9 +37,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     const [size, setSize] = useState(item.size);
     const [type, setType] = useState(item.type);
 
-    const [lastUsed, setLastUsed] = useState(
-        item.lastUsed ? new Date(item.lastUsed).toISOString().split('T')[0] : ""
-    );
+    
 
     // Track selected IDs for the UI toggle logic
     const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
@@ -158,7 +156,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                 brand,
                 size,
                 type,
-                lastUsed,
+                //lastUsed,
                 tags: finalTags
             });
             onClose();
@@ -234,15 +232,13 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                             
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid gap-3">
                                 
                                 <Field label="Type">
-                                    <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket" />
+                                    <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket, Pants..." />
                                 </Field>
                                 
-                                <Field label="Last Used">
-                                    <input type="date" value={lastUsed} onChange={(e) => setLastUsed(e.target.value)} className={`${inputClass} scheme-dark`} />
-                                </Field>
+                        
                             
                             </div>
 

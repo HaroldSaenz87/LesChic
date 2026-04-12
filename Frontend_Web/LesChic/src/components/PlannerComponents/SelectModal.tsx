@@ -186,7 +186,7 @@ export const SelectModal = ({ isOpen, onClose, lookbooks, onSelect }: SelectEnse
                                     onClick={handleConfirm}
                                     className="mt-4 w-full py-4 bg-secondary text-black font-display font-bold text-xs uppercase tracking-[0.2em] rounded-xl hover:bg-white transition-all shadow-lg"
                                 >
-                                    Confirm Ensemble
+                                    Confirm
                                 </button>
                             
                             </div>

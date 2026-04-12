@@ -14,10 +14,10 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
     const navigate = useNavigate();
 
     return (
-        <div onClick={() => navigate(to)} className="flex flex-col gap-4 p-6 rounded-r-2xl bg-[#242424] border border-white/35 border-l-4 border-l-secondary backdrop-blur-md cursor-pointer hover:bg-white/5 hover:border-white/40 hover:scale-[1.04] transition-all duration-200 group">
-            
-            
-
+        <div 
+            onClick={() => navigate(to)} 
+            className="relative overflow-hidden flex flex-col gap-4 p-6 rounded-r-2xl bg-[#242424] border border-white/35 border-l-4 border-l-secondary backdrop-blur-md cursor-pointer hover:bg-white/5 hover:border-white/40 hover:scale-[1.02] transition-all duration-300 group"
+        >
             <div className="flex flex-col gap-4">
                 {/* Large count number */}
                 <p className="text-4xl font-bold text-white stat-value tracking-tight">
@@ -25,9 +25,8 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
                 </p>
 
                 <div className="flex items-center gap-3 min-w-0">
-
-                    {/* Icon with hover scale effect */}
-                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-200">
+                    {/* Icon with tilt effect */}
+                    <div className="w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:bg-secondary group-hover:border-secondary group-hover:text-black">
                         {icon}
                     </div>
 
@@ -35,15 +34,14 @@ const StatCard = ({ icon, label, count, to }: StatCardProps) => {
                     <p className="text-white/80 text-xs uppercase tracking-[0.15em] font-bold leading-tight truncate">
                         {label}
                     </p>
-
-
                 </div>
-            
             </div>
-        
-        
+
+            {/* UNDERFILL BORDER: Matches the 4px thickness of the left border */}
+            <div 
+                className="absolute bottom-0 left-0 h-1 w-0 bg-secondary transition-all duration-500 ease-out group-hover:w-full" 
+            />
         </div>
-        
     );
 };
 
