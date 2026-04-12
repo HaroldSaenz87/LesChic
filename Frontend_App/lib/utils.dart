@@ -104,20 +104,21 @@ Future<String> doRegister(String name, String lastName, String email, String pas
 
 Future<String> doCreateClothes (String token, String title, String size, String type, String palette, {String? brand, List<String>? tags, File? image}) async { //TODO make sure parameters are set correctly
 
-String _url = 'http://ec-albo.xyz:5000/api/clothes';
-var request = http.MultipartRequest('POST', Uri.parse(_url));
-request.headers.addAll({'x-token': token});
+  String _url = 'http://ec-albo.xyz:5000/api/clothes';
+  var request = http.MultipartRequest('POST', Uri.parse(_url));
+  request.headers.addAll({'x-token': token});
 
-//add provided fields
-request.fields['title'] = title;
-request.fields['size'] = size;
-if (brand != null) request.fields['brand'] = brand;
-request.fields['type'] = type;
-request.fields['palette'] = palette;
-//if (tags != null) request.fields['tags'] = tags; //TODO figure out how to add tags
-if (image != null) request.files.add(await http.MultipartFile.fromPath('image', image.path));
+  //add provided fields
+  request.fields['title'] = title;
+  request.fields['size'] = size;
+  if (brand != null) request.fields['brand'] = brand;
+  request.fields['type'] = type;
+  request.fields['palette'] = palette;
+  //if (tags != null) request.fields['tags'] = tags; //TODO figure out how to add tags
+  if (image != null) request.files.add(await http.MultipartFile.fromPath('image', image.path));
 
-var response = await request.send();
-print(await response.stream.bytesToString());
-return response.statusCode.toString();
+  print('request: ${request.toString()}');
+  var response = await request.send();
+  print(await response.stream.bytesToString());
+  return response.statusCode.toString();
 }
