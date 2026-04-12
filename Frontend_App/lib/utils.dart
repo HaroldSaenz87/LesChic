@@ -9,6 +9,33 @@ void showSnackBar(dynamic context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
 
+/*custom implementation of FlutterSecureStorage*/
+class StorageService {
+  static final StorageService _instance = StorageService._internal();
+
+  factory StorageService() => _instance;
+
+  StorageService._internal();
+
+  final String KEY_USER_DATA = 'UserData';
+  final _storage = const FlutterSecureStorage();
+
+  Future<void> saveUserData(UserData data) async
+  {
+    await _storage.write(key: KEY_USER_DATA, value: data.toJson());
+  }
+
+  //returns null if data not found
+  Future<UserData?> getUserData() async {
+    try {
+      String? json = await _storage.read(key: KEY_USER_DATA);
+      return UserData.fromJson(json!);
+    } catch (e) {
+      return null;
+    }
+  }
+}
+
 /*Data Structures*/
 class UserData {
   final String uid;
