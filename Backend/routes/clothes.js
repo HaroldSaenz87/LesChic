@@ -141,7 +141,10 @@ router.delete("/:id", async (req, res) => {
         }
 
         // delete referenced image
-        deleteImage(deleted.imagePath);
+        if (deleted.imagePath != '/images/default.jpg') {
+            // if image is not the default
+            deleteImage(deleted.imagePath);
+        }
 
         // Make sure to update existing lists
         await List.updateMany(
