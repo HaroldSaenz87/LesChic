@@ -43,9 +43,10 @@ class AddClothesScreen extends StatefulWidget {
 class _AddClothesScreenState extends State<AddClothesScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  double MAX_IMAGE_DIMENSION = 1024;
 
   Future<void> _takePhoto() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera, maxHeight: MAX_IMAGE_DIMENSION, maxWidth: MAX_IMAGE_DIMENSION);
 
     if (pickedFile != null) {
       setState(() {
@@ -55,7 +56,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   }
 
   Future<void> _choosePhoto() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery, maxHeight: MAX_IMAGE_DIMENSION, maxWidth: MAX_IMAGE_DIMENSION);
 
     if (pickedFile != null) {
       setState(() {
