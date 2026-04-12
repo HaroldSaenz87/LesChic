@@ -31,6 +31,17 @@ class UserData {
       _ => throw const FormatException('Failed to log in.'),
     };
   }
+
+  String toJson(){
+    Map<String, dynamic> map = {
+      'uid': uid,
+      'name': name,
+      'email': email,
+      'token': token
+    };
+
+    return json.encode(map);
+  }
 }
 
 /*API CALLS*/
