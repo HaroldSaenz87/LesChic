@@ -64,6 +64,15 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     }
   }
 
+  void _submitClothes(File? image) async {
+    //showSnackBar(context, 'submit clothes pressed');
+    var storage = StorageService();
+    UserData? user = await storage.getUserData();
+    if (user == null) return;
+    String result = await doCreateClothes(user.token, 'TestItem', 'size', 'type', 'palette', image: image);
+    showSnackBar(context, result);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +98,16 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
             heroTag: 'gallery',
             onPressed: _choosePhoto,
             child: Icon(Icons.photo_library),
+          ),
+
+          //spacer
+          SizedBox(height: 20,),
+
+          //submit clothes
+          FloatingActionButton(
+            heroTag: 'submit',
+            onPressed: () => _submitClothes(_image),
+            child: Icon(Icons.add),
           ),
         ],
       ),
