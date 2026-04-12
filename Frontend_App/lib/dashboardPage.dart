@@ -195,7 +195,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 
           //spacer
           SizedBox(height: 10,),
-          
+
           //choose from gallery
           FloatingActionButton(
             heroTag: 'gallery',
