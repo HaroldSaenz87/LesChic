@@ -82,7 +82,10 @@ Future<UserData> doLogin(String email, String password) async {
     },
     body: json.encode(_loginInfo)
   );
-  return UserData.fromJson(response.body);
+  final storage = StorageService();
+  UserData data = UserData.fromJson(response.body);
+  await storage.saveUserData(data);
+  return data;
 }
 
 Future<String> doRegister(String name, String lastName, String email, String password) async {
