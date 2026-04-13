@@ -36,6 +36,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     const [brand, setBrand] = useState(item.brand);
     const [size, setSize] = useState(item.size);
     const [type, setType] = useState(item.type);
+    const [palette, setPalette] = useState(item.palette || "");
 
     
 
@@ -156,7 +157,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                 brand,
                 size,
                 type,
-                //lastUsed,
+                palette,
                 tags: finalTags
             });
             onClose();
@@ -232,10 +233,45 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                             
                             </div>
 
-                            <div className="grid gap-3">
+                            <div className="grid grid-cols-2 gap-3">
                                 
                                 <Field label="Type">
                                     <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket, Pants..." />
+                                </Field>
+
+                                <Field label="Color Palette">
+                                    <div className="flex flex-col gap-3">
+                                        <input 
+                                            type="text" 
+                                            value={palette} 
+                                            onChange={(e) => setPalette(e.target.value)} 
+                                            className={inputClass} 
+                                            placeholder="Tan, White or Black..." 
+                                        />
+                                        
+                                        {/* Swatch Preview Logic */}
+                                        {palette && (
+                                            <div className="flex flex-wrap gap-2 px-1">
+                                                {palette.split(',').map((color, index) => {
+                                                    const trimmedColor = color.trim().toLowerCase();
+                                                    if (!trimmedColor) return null;
+
+                                                    return (
+                                                        <div key={index} className="flex items-center gap-1.5 bg-white/5 rounded-full pl-1 pr-3 py-1 border border-white/5">
+                                                            <div 
+                                                                className="w-3 h-3 rounded-full border border-white/20" 
+                                                                // Browser handles "tan", "blue", etc. automatically
+                                                                style={{ backgroundColor: trimmedColor }}
+                                                            />
+                                                            <span className="text-[9px] text-white/50 uppercase tracking-widest">
+                                                                {trimmedColor}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
                                 </Field>
                                 
                         

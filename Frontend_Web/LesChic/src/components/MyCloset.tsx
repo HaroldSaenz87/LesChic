@@ -32,6 +32,18 @@ export const MyCloset = () => {
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("User");
 
+    const [selectedPalettes, setSelectedPalettes] = useState<string[]>([]);
+
+    const uniquePalettes = Array.from(
+        new Set(
+            clothes
+                .map(item => item.palette)
+                .filter(Boolean)
+                // Instead of flatMap + split, we just format the existing string
+                .map(p => p.split(',').map(c => c.trim().toLowerCase()).join('/'))
+        )
+    ).sort();
+
     const overlayRef = useRef<HTMLDivElement>(null);
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -75,13 +87,16 @@ export const MyCloset = () => {
             item.title.toLowerCase().includes(searchLower) || 
             item.brand.toLowerCase().includes(searchLower) || 
             item.type.toLowerCase().includes(searchLower) ||
+            item.palette?.toLowerCase().includes(searchLower) ||
             item.tags?.some(tag => tag.title.toLowerCase().includes(searchLower));
 
         const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type);
         const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(item.brand);
         const matchesTag = selectedTags.length === 0 || item.tags?.some(tag => selectedTags.includes(tag.title));
 
-        return matchesSearch && matchesType && matchesBrand && matchesTag;
+        const matchesPalette = selectedPalettes.length === 0 || selectedPalettes.includes(item.palette?.split(',').map(c => c.trim().toLowerCase()).join('/'));
+
+        return matchesSearch && matchesType && matchesBrand && matchesTag && matchesPalette;
     });
 
     // Event Handlers
@@ -95,6 +110,10 @@ export const MyCloset = () => {
 
     const toggleTag = (tag: string) => {
         setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+    };
+
+    const togglePalette = (palette: string) => {
+        setSelectedPalettes(prev => prev.includes(palette) ? prev.filter(p => p !== palette) : [...prev, palette]);
     };
 
     // Data Fetching
@@ -248,7 +267,10 @@ export const MyCloset = () => {
                         tags={uniqueTags}
                         selectedTags={selectedTags}
                         onToggleTag={toggleTag}
-                        onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([])}}
+                        palettes={uniquePalettes}
+                        selectedPalettes={selectedPalettes}
+                        onTogglePalette={togglePalette}
+                        onReset={() => {setSelectedTypes([]); setSelectedBrands([]); setSelectedTags([]); setSelectedPalettes([]);}}
                     />
 
                     <div className="mt-4">

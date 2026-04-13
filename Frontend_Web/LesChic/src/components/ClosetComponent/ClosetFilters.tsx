@@ -18,6 +18,10 @@ interface ClosetFiltersProps {
     selectedTags: string[];
     onToggleTag: (tag: string) => void;
 
+    palettes: string[];
+    selectedPalettes: string[];
+    onTogglePalette: (palette: string) => void
+
     onReset: () => void;
 }
 
@@ -66,7 +70,7 @@ const FilterDropdown = ({ label, options, selected, onToggle, isOpen, onOpen }: 
 
 export const ClosetFilters = ({
     searchQuery, setSearchQuery, categories, selectedCat, onToggleCategory,
-    brands, selectedBrands, onToggleBrand, tags, selectedTags, onToggleTag, onReset
+    brands, selectedBrands, onToggleBrand, tags, selectedTags, onToggleTag, palettes, selectedPalettes, onTogglePalette, onReset
 }: ClosetFiltersProps) => {
     
     // Track which dropdown is open to ensure only one is visible at a time
@@ -102,7 +106,7 @@ export const ClosetFilters = ({
         setActiveDropdown(activeDropdown === name ? null : name);
     };
 
-    const hasFilters = selectedCat.length > 0 || selectedBrands.length > 0 || selectedTags.length > 0;
+    const hasFilters = selectedCat.length > 0 || selectedBrands.length > 0 || selectedTags.length > 0 || selectedPalettes.length > 0;
 
     return (
 
@@ -142,6 +146,15 @@ export const ClosetFilters = ({
                     label="Tag" options={tags} selected={selectedTags} 
                     onToggle={onToggleTag} isOpen={activeDropdown === 'tag'} 
                     onOpen={() => toggleDropdown('tag')} 
+                />
+
+                <FilterDropdown 
+                    label="Color" 
+                    options={palettes} 
+                    selected={selectedPalettes} 
+                    onToggle={onTogglePalette} 
+                    isOpen={activeDropdown === 'palette'} 
+                    onOpen={() => toggleDropdown('palette')} 
                 />
 
                 {hasFilters && (
