@@ -25,6 +25,7 @@ class App extends StatelessWidget {
       routes: {
         '/': (context) => const LandingPage(),
         '/login': (context) => const LoginPage(),
+        '/login/forgot': (content) => const ForgotPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/dashboard/addClothes': (context) => const AddClothesScreen(),
       },

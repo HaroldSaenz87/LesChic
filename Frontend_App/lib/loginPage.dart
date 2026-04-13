@@ -176,8 +176,69 @@ class Forgot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => showSnackBar(context, 'Forgot Password clicked'),
+      onPressed: () => Navigator.pushNamed(context, '/login/forgot'),
       child: Text('Forgot Password?'),
+    );
+  }
+}
+
+class ForgotPage extends StatefulWidget {
+  const ForgotPage({super.key});
+
+  @override
+  State<ForgotPage> createState() => _ForgotPageState();
+}
+
+class _ForgotPageState extends State<ForgotPage> {
+  final GlobalKey<FormState> _forgotFormKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void forgotPressed() async {
+    if(_forgotFormKey.currentState!.validate()) {
+      String response = await doResetPassword(_emailController.text);
+      if (mounted) showSnackBar(context, response);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Forgot Password'),),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _forgotFormKey,
+          child: Column(
+            spacing: 16.0,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.email),
+                  labelText: 'Email',
+                ),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  return null;
+                },
+              ),
+              FilledButton(
+                onPressed: forgotPressed,
+                child: Text('Send reset email'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

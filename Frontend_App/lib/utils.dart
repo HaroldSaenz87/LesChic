@@ -172,3 +172,18 @@ Future<bool> doRefreshToken() async {
   storage.saveUserData(user);
   return true;
 }
+
+Future<String> doResetPassword(String email) async {
+  Map<String, String> _forgotInfo = {'email': email};
+  String _url = 'http://ec-albo.xyz:5000/api/auth/forgot-password';
+  final response = await http.post(
+    Uri.parse(_url),
+    headers: {
+      HttpHeaders.contentTypeHeader : 'application/json'
+    },
+    body: json.encode(_forgotInfo),
+  );
+
+  Map<String, dynamic> _res = jsonDecode(response.body);
+  return _res['msg'] ?? 'Error resetting password';
+}
