@@ -18,7 +18,7 @@ const NavItem = ({ icon, label, to, end }: NavItemProps) => (
             flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer 
             ${isActive 
                 ? 'bg-accent/25 text-primary/70 border-l-4 border-primary' 
-                : 'text-primary/80 hover:text-primary hover:bg-accent/20'}
+                : 'text-primary hover:text-primary/70 hover:bg-accent/20'}
         `}
     >
         {icon}
@@ -82,7 +82,7 @@ export const SideNav = () =>{
             <div className="p-4 border-t border-b border-accent/40">
                 <button 
                 onClick={handleLogout}
-                className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-primary/70 hover:text-red-500/70 hover:bg-red-50/60 rounded-xl transition-all duration-200 group"
+                className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-primary hover:text-red-500 hover:bg-red-50/10 rounded-xl transition-all duration-200 group"
                 >
                     <LogOut size={20} className="group-hover:translate-x-1 transition-transform" />
                     <span className="text-sm font-medium uppercase tracking-wider">Sign Out</span>

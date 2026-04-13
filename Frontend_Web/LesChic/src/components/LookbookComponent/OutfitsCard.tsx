@@ -136,6 +136,7 @@ export const OutfitsCard = ({ lookbook, onClick, onDelete }: LookbookCardProps) 
 
                     <button
                         onClick={handleRemove}
+                        aria-label={isConfirming ? "Confirm deletion of lookbook" : "Remove lookbook"}
                         className={`flex items-center gap-1.5 px-2 py-1 rounded-lg transition-all duration-300 cursor-pointer ${
                             isConfirming 
                             ? "text-red-500 scale-105" 

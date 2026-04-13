@@ -92,7 +92,7 @@ export const ClothingCard = ({ item, allTags = [], onSave, onDelete, onTagCreate
                                 setShowMenu(!showMenu);
                             }}
                             className="p-1.5 rounded-full bg-black/40 border border-white/10 text-white hover:bg-black/80 hover:text-white transition-all backdrop-blur-sm cursor-pointer"
-                            
+                            aria-label="Open item options"
                         >
                             <MoreVertical size={18} />
                         </button>

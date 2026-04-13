@@ -75,11 +75,11 @@ export const ClosetRow = ({ title, items, allTags, onUpdate, onDelete, onTagCrea
 
                 {items.length > 3 && (
                     <>
-                        <button onClick={() => handleScroll('left')} className="absolute -left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-white/10 text-white p-2 rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer">
+                        <button onClick={() => handleScroll('left')} className="absolute -left-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-white/10 text-white p-2 rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer" aria-label="Previous items">
                             <ChevronLeft size={18} />
                         </button>
                         
-                        <button onClick={() => handleScroll('right')} className="absolute -right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-white/10 text-white p-2 rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer">
+                        <button onClick={() => handleScroll('right')} className="absolute -right-4 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-white/10 text-white p-2 rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer" aria-label="Next items">
                             <ChevronRight size={18} />
                         </button>
                     
