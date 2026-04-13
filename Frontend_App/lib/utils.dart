@@ -3,9 +3,30 @@ import 'dart:io';
 
 import 'package:flutter/material.dart'; //used by showSnackBar
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http; //used to contact the API
 
 final String FONT_NAME = 'Cormorant Garamond';
+
+Widget Logo() {
+    return Column(
+      children: [
+        SvgPicture.asset(
+          'assets/shapeV2.svg',
+          width: 50.0,
+          height: 50.0,
+        ),
+        Text(
+          'LesChic',
+          style: TextStyle(fontSize: 75),
+        ),
+        Text(
+          'The Art of Dressing',
+          style: TextStyle(fontSize: 25),
+        ),
+      ],
+    );
+  }
 
 void showSnackBar(dynamic context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));

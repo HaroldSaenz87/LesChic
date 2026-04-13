@@ -13,18 +13,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isLoginMode = true;
 
-  Widget Logo() {
-    return Column(
-      children: [
-        Text(
-          'LesChic',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SvgPicture.asset('assets/shapeV2.svg'),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
