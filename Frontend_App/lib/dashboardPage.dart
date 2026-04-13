@@ -18,7 +18,7 @@ class DashboardPage extends StatelessWidget {
         children: [
           //log out button
           ElevatedButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+            onPressed: () => doLogout(context),
             child: const Text('Log out'),
           ),
 

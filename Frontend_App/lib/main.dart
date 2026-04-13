@@ -1,4 +1,5 @@
 import 'package:closet/dashboardPage.dart';
+import 'package:closet/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'loginPage.dart';
@@ -22,10 +23,48 @@ class App extends StatelessWidget {
 
       //set first screen seen by user
       routes: {
-        '/': (context) => const LoginPage(),
+        '/': (context) => const LandingPage(),
+        '/login': (context) => const LoginPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/dashboard/addClothes': (context) => const AddClothesScreen(),
       },
+    );
+  }
+}
+
+class LandingPage extends StatefulWidget {
+  const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  late Future<bool> _loggedInFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loggedInFuture = checkLoggedIn();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: _loggedInFuture.then((value) {
+          if(value == true) {
+            Navigator.pushReplacementNamed(context, '/dashboard');
+          } else {
+            Navigator.pushReplacementNamed(context, '/login');
+          }
+        }), 
+        builder: (context, snapshot) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }

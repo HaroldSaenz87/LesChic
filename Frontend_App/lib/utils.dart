@@ -9,6 +9,22 @@ void showSnackBar(dynamic context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
 
+Future<void> doLogout(BuildContext context) async {
+  StorageService storage = StorageService();
+  await storage.clearData();
+  Navigator.pushReplacementNamed(context, '/');
+}
+
+//times out and assumes false after 7 seconds (5 felt too short, 10 too long)
+Future<bool> checkLoggedIn() async {
+  bool result = await doRefreshToken().timeout(
+    const Duration(seconds: 7),
+    onTimeout: () => false
+  );
+  print('login check: $result');
+  return result;
+}
+
 /*custom implementation of FlutterSecureStorage*/
 class StorageService {
   static final StorageService _instance = StorageService._internal();
@@ -33,6 +49,11 @@ class StorageService {
     } catch (e) {
       return null;
     }
+  }
+
+  //remove the data from storage
+  Future<void> clearData() async {
+    _storage.delete(key: KEY_USER_DATA);
   }
 }
 
@@ -121,4 +142,33 @@ Future<String> doCreateClothes (String token, String title, String size, String 
   var response = await request.send();
   print(await response.stream.bytesToString());
   return response.statusCode.toString();
+}
+
+Future<bool> doRefreshToken() async {
+  StorageService storage = StorageService();
+  UserData? user = await storage.getUserData();
+
+  //no data saved, failed
+  if (user == null) return false;
+
+  //there's data, try refreshing it
+  String _url = 'http://ec-albo.xyz:5000/api/auth/renew';
+  final response = await http.get(
+    Uri.parse(_url),
+    headers: {
+      'x-token': user.token
+    }
+  );
+
+  print(response.statusCode);
+
+  // response is bad, failed
+  if (response.statusCode != 200) {
+    return false;
+  }
+
+  //response good, replace user data with new token
+  user = UserData.fromJson(response.body);
+  storage.saveUserData(user);
+  return true;
 }
