@@ -33,7 +33,7 @@ export const OutfitChart = ({ planned, used }: OutfitDonutChartProps) => {
 
             {/* Recharts responsive wrapper -> fills parent width */}
             <div className="relative w-full h-48">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height={192}>
                     <PieChart>
                         <Pie
                             isAnimationActive={false}
