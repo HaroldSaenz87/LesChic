@@ -38,7 +38,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
     const [type, setType] = useState(item.type);
     const [palette, setPalette] = useState(item.palette || "");
 
-    
+    const isInvalid = !title.trim() || !brand.trim() || !size.trim() || !type.trim() || !palette.trim();
 
     // Track selected IDs for the UI toggle logic
     const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
@@ -217,17 +217,17 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
 
                         <div className="flex flex-col gap-4 flex-1">
                             
-                            <Field label="Title">
+                            <Field label="Title" required>
                                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className={inputClass} placeholder="Item name" />
                             </Field>
 
                             <div className="grid grid-cols-2 gap-3">
                                 
-                                <Field label="Brand">
+                                <Field label="Brand" required>
                                     <input type="text" value={brand} onChange={(e) => setBrand(e.target.value)} className={inputClass} placeholder="Brand" />
                                 </Field>
                                 
-                                <Field label="Size">
+                                <Field label="Size" required>
                                     <input type="text" value={size} onChange={(e) => setSize(e.target.value)} className={inputClass} placeholder="M, L, 32" />
                                 </Field>
                             
@@ -235,11 +235,11 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
 
                             <div className="grid grid-cols-2 gap-3">
                                 
-                                <Field label="Type">
+                                <Field label="Type" required>
                                     <input type="text" value={type} onChange={(e) => setType(e.target.value)} className={inputClass} placeholder="Shirt, Jacket, Pants..." />
                                 </Field>
 
-                                <Field label="Color Palette">
+                                <Field label="Color Palette" required>
                                     <div className="flex flex-col gap-3">
                                         <input 
                                             type="text" 
@@ -404,7 +404,7 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
                             
                             <button
                                 onClick={handleSave}
-                                disabled={saving}
+                                disabled={saving || isInvalid}
                                 className="flex items-center gap-2 bg-secondary text-black font-display text-sm uppercase tracking-widest px-5 py-2.5 rounded-xl disabled:opacity-30 hover:brightness-110 transition-all cursor-pointer"
                             >
                                 <Save size={18} />
@@ -427,9 +427,9 @@ export const EditModal = ({ item, allTags, onClose, onSave, onTagCreated }: Edit
 
 const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-3.5 text-white text-[11px] uppercase tracking-widest font-bold placeholder:text-white/25 focus:outline-none focus:border-white/40 transition-all";
 
-const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+const Field = ({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) => (
     <div className="flex flex-col gap-1.5">
-        <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/60">{label}</label>
+        <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-white/60">{label} {required && <span className="text-[red] text-[10px]">*</span>}</label>
         {children}
     </div>
 );
