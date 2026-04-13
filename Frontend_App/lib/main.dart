@@ -17,6 +17,7 @@ class App extends StatelessWidget {
       //set the theme TODO: add color palette
       theme: ThemeData(
         fontFamily: FONT_NAME,
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(242, 166, 171, 1)),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
