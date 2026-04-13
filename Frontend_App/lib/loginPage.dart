@@ -200,31 +200,37 @@ class _ForgotPageState extends State<ForgotPage> {
       appBar: AppBar(title: Text('Forgot Password'),),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _forgotFormKey,
-          child: Column(
-            spacing: 16.0,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.email),
-                  labelText: 'Email',
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Logo(),
+            Form(
+              key: _forgotFormKey,
+              child: Column(
+                spacing: 16.0,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.email),
+                      labelText: 'Email',
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
+                  FilledButton(
+                    onPressed: forgotPressed,
+                    child: Text('Send reset email'),
+                  ),
+                ],
               ),
-              FilledButton(
-                onPressed: forgotPressed,
-                child: Text('Send reset email'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
