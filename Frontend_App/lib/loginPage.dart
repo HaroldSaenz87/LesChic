@@ -1,4 +1,5 @@
 import 'utils.dart'; //custom utils
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,40 +13,56 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isLoginMode = true;
 
+  Widget Logo() {
+    return Column(
+      children: [
+        Text(
+          'LesChic',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SvgPicture.asset('assets/shapeV2.svg'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Spacer(), // TODO: replace this with proper positioning
-          Text('Le Chic'), //TODO: make app title prettier; add logo
-
-          //set view based on "toggle" below
-          isLoginMode ? LoginView() : RegisterView(),
-
-          //swap between login and register view
-          SegmentedButton(
-            showSelectedIcon: false,
-            segments: const <ButtonSegment<bool>>[
-              ButtonSegment<bool>(
-                value: true,
-                label: Text('Login'),
-              ),
-              ButtonSegment<bool>(
-                value: false,
-                label: Text('Register'),
-              ),
-            ], 
-            selected: <bool>{isLoginMode},
-            onSelectionChanged: (Set<bool> newSelection) {
-              setState(() {
-                isLoginMode = newSelection.first;
-              });
-            },
-          ),
-
-          Spacer(), //TODO: refer to spacer above for note
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            //Spacer(), // TODO: replace this with proper positioning
+            Logo(), //TODO: make app title prettier; add logo
+        
+            //set view based on "toggle" below
+            isLoginMode ? LoginView() : RegisterView(),
+        
+            //swap between login and register view
+            SegmentedButton(
+              showSelectedIcon: false,
+              segments: const <ButtonSegment<bool>>[
+                ButtonSegment<bool>(
+                  value: true,
+                  label: Text('Login'),
+                ),
+                ButtonSegment<bool>(
+                  value: false,
+                  label: Text('Register'),
+                ),
+              ], 
+              selected: <bool>{isLoginMode},
+              onSelectionChanged: (Set<bool> newSelection) {
+                setState(() {
+                  isLoginMode = newSelection.first;
+                });
+              },
+            ),
+        
+            //Spacer(), //TODO: refer to spacer above for note
+          ],
+        ),
       ),
     );
   }
@@ -109,6 +126,7 @@ class _LoginFormState extends State<LoginForm>{
     return Form(
       key: _logFormKey,
       child: Column(
+        spacing: 16.0,
         children: <Widget>[
           //email field
           TextFormField(
@@ -200,6 +218,7 @@ class _RegisterViewState extends State<RegisterView> {
     return Form(
       key: _regFormKey,
       child: Column(
+        spacing: 16.0,
         children: <Widget>[
           //first name field
           TextFormField(
