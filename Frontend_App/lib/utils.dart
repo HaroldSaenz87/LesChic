@@ -5,6 +5,8 @@ import 'package:flutter/material.dart'; //used by showSnackBar
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http; //used to contact the API
 
+final String FONT_NAME = 'Cormorant Garamond';
+
 void showSnackBar(dynamic context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }

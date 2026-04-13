@@ -16,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       //set the theme TODO: add color palette
       theme: ThemeData(
+        fontFamily: FONT_NAME,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),
         ),

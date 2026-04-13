@@ -93,3 +93,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Cormorant Garamond
+      fonts:
+        - asset: fonts/CormorantGaramond-VariableFont_wght.ttf
+        - asset: fonts/CormorantGaramond-Italic-VariableFont_wght.ttf
+          style: italic
