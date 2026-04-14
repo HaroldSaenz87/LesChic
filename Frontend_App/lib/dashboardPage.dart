@@ -4,8 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => DashboardPageState();
+}
+
+class DashboardPageState extends State<DashboardPage> {
+  StorageService storage = StorageService();
+  late Future<UserData?> _userDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userDataFuture = storage.getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +48,65 @@ class DashboardPage extends StatelessWidget {
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-          ],
+        child: FutureBuilder(
+          future: _userDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if(snapshot.hasData) {
+                UserData data = snapshot.data!;
+                return Column(
+                  children: [
+                    Text('Hello, ${data.name}!', style: TextStyle(fontSize: 30),),
+                    ClothesList(user: data),
+                  ],
+                );
+              }
+              return Center(child: Text('Loading UserData failed. Please log out and try again'),);
+            }
+            return Center(child: CircularProgressIndicator(),);
+          },
         ),
       ),
+    );
+  }
+}
+
+class ClothesList extends StatefulWidget {
+  const ClothesList({super.key, required this.user});
+
+  final UserData user;
+
+  @override
+  State<ClothesList> createState() => _ClothesListState();
+}
+
+class _ClothesListState extends State<ClothesList> {
+  late Future<List<ClothesItem>> clothesList;
+
+  @override
+  void initState() {
+    super.initState();
+    clothesList = doGetClothes(widget.user);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: clothesList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              for (ClothesItem item in snapshot.data!)
+                Text(item.title),
+            ],
+          );
+        }
+        if(!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+          return Text('failure');
+        }
+        return CircularProgressIndicator();
+      }
     );
   }
 }

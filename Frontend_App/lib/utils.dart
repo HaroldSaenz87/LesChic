@@ -115,6 +115,82 @@ class UserData {
   }
 }
 
+class ClothesItem {
+  final String title; //title
+  final String imagePath;//imagepath
+  final String size;//size
+  final String brand;//brand
+  final String type;//type
+  final String palette;//palette
+  //final DateTime lastUsed;//lastUsed
+  //final List<String> tags;//tags
+  final String userId;//userId
+  final String id;//id
+
+  const ClothesItem({required this.title, required this.imagePath, required this.size, required this.brand, required this.type, required this.palette, /*required this.lastUsed, required this.tags,*/ required this.userId, required this.id});
+
+  factory ClothesItem.fromMap(Map<String, dynamic> map) {
+    return switch (map) {
+      {
+        'title': String title,
+        'imagePath': String imagePath,
+        'size': String size,
+        'brand': String brand,
+        'type': String type,
+        'palette': String palette,
+        //'lastUsed': String lastUsed,
+        //'tags': List<String> tags,
+        'userId': String userId,
+        'id': String id
+      } => ClothesItem(
+        title: title,
+        imagePath: imagePath,
+        size: size,
+        brand: brand,
+        type: type,
+        palette: palette,
+        //lastUsed: DateTime.parse(lastUsed),
+        //tags: tags,
+        userId: userId,
+        id: id
+      ),
+      _ => throw const FormatException('invalid clothing item'),
+    };
+  }
+
+
+  factory ClothesItem.fromJson(String json) {
+    Map<String, dynamic> map = jsonDecode(json) as Map<String, dynamic>;
+
+    return switch (map) {
+      {
+        'title': String title,
+        'imagePath': String imagePath,
+        'size': String size,
+        'brand': String brand,
+        'type': String type,
+        'palette': String palette,
+        //'lastUsed': String lastUsed,
+        //'tags': List<String> tags,
+        'userId': String userId,
+        'id': String id
+      } => ClothesItem(
+        title: title,
+        imagePath: imagePath,
+        size: size,
+        brand: brand,
+        type: type,
+        palette: palette,
+        //lastUsed: DateTime.parse(lastUsed),
+        //tags: tags,
+        userId: userId,
+        id: id
+      ),
+      _ => throw const FormatException('invalid clothing item'),
+    };
+  }
+}
+
 /*API CALLS*/
 Future<UserData> doLogin(String email, String password) async {
   Map<String, String> _loginInfo = {'email':email, 'password':password};
@@ -209,4 +285,36 @@ Future<String> doResetPassword(String email) async {
 
   Map<String, dynamic> _res = jsonDecode(response.body);
   return _res['msg'] ?? 'Error resetting password';
+}
+
+Future<List<ClothesItem>> doGetClothes(UserData user) async {
+  String _url = 'http://ec-albo.xyz:5000/api/clothes'; //TODO make sure this is right
+  final response = await http.get(
+    Uri.parse(_url),
+    headers: {
+      'x-token' : user.token,
+      HttpHeaders.contentTypeHeader : 'application/json'
+    }
+  );
+
+  try {
+
+  dynamic map = jsonDecode(response.body);
+  List<dynamic> rawList = map['clothes'];
+  //return rawList[0] as String;
+  //print(rawList[0].runtimeType);
+  List<ClothesItem> clothesList = [];
+  for(dynamic item in rawList) {
+    print(item.runtimeType);
+    clothesList.add(ClothesItem.fromMap(item));
+  }
+
+  return clothesList;
+
+  } catch (e, stacktrace) {
+    print ('error: $e');
+    print(stacktrace);
+    return [];
+  }
+  
 }
