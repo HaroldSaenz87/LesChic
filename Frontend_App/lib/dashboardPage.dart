@@ -72,7 +72,7 @@ class DashboardPageState extends State<DashboardPage> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
-                      Text('Hello, ${data.name}!', style: TextStyle(fontSize: 30),),
+                      SizedBox(width: double.infinity, child: Text('Hello, ${data.name}!', style: TextStyle(fontSize: 50), textAlign: .center,)),
                       ClothesList(user: data),
                     ],
                   ),
