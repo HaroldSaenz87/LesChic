@@ -1,10 +1,14 @@
 import 'package:closet/dashboardPage.dart';
 import 'package:closet/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'loginPage.dart';
 
 void main() {
+  //force app to run in portrait mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const App());
 }
 
