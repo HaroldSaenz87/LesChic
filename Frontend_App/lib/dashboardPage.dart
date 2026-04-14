@@ -10,6 +10,10 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
+        child: Icon(Icons.add),
+      ),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -32,12 +36,6 @@ class DashboardPage extends StatelessWidget {
         minimum: const EdgeInsets.all(16),
         child: Column(
           children: [
-        
-            //add clothes button
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
-              child: const Text('Add clothes'),
-            ),
           ],
         ),
       ),
