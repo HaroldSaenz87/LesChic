@@ -54,11 +54,13 @@ class DashboardPageState extends State<DashboardPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               if(snapshot.hasData) {
                 UserData data = snapshot.data!;
-                return Column(
-                  children: [
-                    Text('Hello, ${data.name}!', style: TextStyle(fontSize: 30),),
-                    ClothesList(user: data),
-                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text('Hello, ${data.name}!', style: TextStyle(fontSize: 30),),
+                      ClothesList(user: data),
+                    ],
+                  ),
                 );
               }
               return Center(child: Text('Loading UserData failed. Please log out and try again'),);
@@ -98,7 +100,7 @@ class _ClothesListState extends State<ClothesList> {
           return Column(
             children: [
               for (ClothesItem item in snapshot.data!)
-                Text(item.title),
+                ClothesListItem(clothes: item),
             ],
           );
         }
@@ -107,6 +109,78 @@ class _ClothesListState extends State<ClothesList> {
         }
         return CircularProgressIndicator();
       }
+    );
+  }
+}
+
+@immutable
+class ClothesListItem extends StatelessWidget {
+  const ClothesListItem({super.key, required this.clothes});
+
+  final ClothesItem clothes;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 16),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(16),
+          child: Stack(
+            children: [
+              _buildBackground(context),
+              _buildGradient(),
+              _buildText(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackground(BuildContext context) {
+    String url = 'http://ec-albo.xyz:5000${clothes.imagePath}';
+    return Positioned.fill(child: Image.network(url, fit: BoxFit.cover,));
+  }
+
+  Widget _buildGradient() {
+    return Positioned.fill(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0.6, 0.95],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildText() {
+    return Positioned(
+      left: 20,
+      bottom: 20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            clothes.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '${clothes.brand} - ${clothes.size} ${clothes.type}',
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+        ],
+      ),
     );
   }
 }
