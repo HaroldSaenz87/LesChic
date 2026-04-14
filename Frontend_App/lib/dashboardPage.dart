@@ -362,8 +362,10 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         
                     //tags field (optional)
                     TextFormField(
-                      controller: _tagsController,
+                      enabled: false,
+                      //controller: _tagsController,
                       decoration: InputDecoration(labelText: 'Tags'),
+                      initialValue: 'Add tags later on the website!',
                     ),
                   ],
                 ),
