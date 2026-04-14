@@ -85,21 +85,22 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   }
 
   void _submitClothes() async {
-    //showSnackBar(context, 'submit clothes pressed');
-    var storage = StorageService();
-    UserData? user = await storage.getUserData();
-    if (user == null) return;
-    String result = await doCreateClothes(
-      user.token,
-      _titleController.text,
-      _sizeController.text,
-      _typeController.text,
-      _paletteController.text,
-      brand: _brandController.text,
-      //tags: _tagsController.text, TODO figure out how to send tags
-      image: _image
-    );
-    showSnackBar(context, result);
+    if(_clothesFormKey.currentState!.validate()) {
+      var storage = StorageService();
+      UserData? user = await storage.getUserData();
+      if (user == null) return;
+      String result = await doCreateClothes(
+        user.token,
+        _titleController.text,
+        _sizeController.text,
+        _typeController.text,
+        _paletteController.text,
+        brand: _brandController.text,
+        //tags: _tagsController.text, TODO figure out how to send tags
+        image: _image
+      );
+      showSnackBar(context, result);
+    }
   }
 
   @override
