@@ -10,7 +10,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.large(
         onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
         child: Icon(Icons.add),
       ),
@@ -198,6 +198,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         ),
       ),
       floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           //take new photo
@@ -221,7 +222,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
           SizedBox(height: 20,),
 
           //submit clothes
-          FloatingActionButton(
+          FloatingActionButton.large(
             heroTag: 'submit',
             onPressed: _submitClothes,
             child: Icon(Icons.add),
