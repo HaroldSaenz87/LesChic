@@ -222,7 +222,7 @@ Future<String> doRegister(String name, String lastName, String email, String pas
   return _map['msg'] ?? 'Error registering';
 }
 
-Future<String> doCreateClothes (String token, String title, String size, String type, String palette, {String? brand, List<String>? tags, File? image}) async { //TODO make sure parameters are set correctly
+Future<int> doCreateClothes (String token, String title, String size, String type, String palette, {String? brand, List<String>? tags, File? image}) async { //TODO make sure parameters are set correctly
 
   String _url = 'http://ec-albo.xyz:5000/api/clothes';
   var request = http.MultipartRequest('POST', Uri.parse(_url));
@@ -240,7 +240,8 @@ Future<String> doCreateClothes (String token, String title, String size, String 
   print('request: ${request.toString()}');
   var response = await request.send();
   print(await response.stream.bytesToString());
-  return response.statusCode.toString();
+  
+  return response.statusCode;
 }
 
 Future<bool> doRefreshToken() async {

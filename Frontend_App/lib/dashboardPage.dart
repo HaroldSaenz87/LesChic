@@ -21,11 +21,26 @@ class DashboardPageState extends State<DashboardPage> {
     _userDataFuture = storage.getUserData();
   }
 
+  Future<void> _addAndUpdateClothes(BuildContext context) async {
+    try {
+      final result = await Navigator.pushNamed(context, '/dashboard/addClothes');
+      print('The result is ${result.toString()}');
+      if(result as int == 200) {
+        print('New clothes added');
+        setState(() {
+          _userDataFuture = storage.getUserData();
+        });
+      }
+    } catch (e, stacktrace) {
+      print(stacktrace);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.large(
-        onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
+        onPressed: () => _addAndUpdateClothes(context),
         child: Icon(Icons.add),
       ),
       drawer: Drawer(
@@ -241,7 +256,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
       var storage = StorageService();
       UserData? user = await storage.getUserData();
       if (user == null) return;
-      String result = await doCreateClothes(
+      int result = await doCreateClothes(
         user.token,
         _titleController.text,
         _sizeController.text,
@@ -251,7 +266,11 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         //tags: _tagsController.text, TODO figure out how to send tags
         image: _image
       );
-      showSnackBar(context, result);
+      if (result == 200 && mounted) { //adding was successful
+        Navigator.pop(context, result);
+      } else { //failed
+        showSnackBar(context, 'Error $result: failed to add item');
+      }
     }
   }
 
