@@ -111,12 +111,26 @@ class _ClothesListState extends State<ClothesList> {
     return FutureBuilder(
       future: clothesList,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return Column(
             children: [
               for (ClothesItem item in snapshot.data!)
                 ClothesListItem(clothes: item),
             ],
+          );
+        }
+        if (snapshot.hasData && snapshot.data!.isEmpty) {
+          TextStyle _textStyle = const TextStyle(fontSize: 20,);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 200),
+            child: Column(
+              spacing: 20.0,
+              children: [
+                Text('Your closet is empty...', style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                Text('Time to go shopping, then add your haul by clicking the button below!', style: _textStyle, textAlign: TextAlign.center,),
+                //Text('then add your haul by clicking the button below!', style: _textStyle,),
+              ],
+            ),
           );
         }
         if(!snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
