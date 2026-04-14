@@ -305,6 +305,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
             spacing: 20.0,
             children: [
               ImagePreviewContainer(image: _image,),
+              ButtonBar(),
               Form(
                 key: _clothesFormKey,
                 child: Column(
@@ -374,51 +375,22 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
                   ],
                 ),
               ),
+              FilledButton(onPressed: _submitClothes, child: Text('Add to Closet')),
             ],
           ),
         ),
       ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          //remove photo
-          FloatingActionButton(
-            heroTag: 'remove',
-            onPressed: _removePhoto,
-            child: Icon(Icons.delete),
-          ),
+    );
+  }
 
-          //spacer
-          SizedBox(height: 10,),
-          //take new photo
-          FloatingActionButton(
-            heroTag: 'camera',
-            onPressed: _takePhoto,
-            child: Icon(Icons.photo_camera),
-          ),
-
-          //spacer
-          SizedBox(height: 10,),
-
-          //choose from gallery
-          FloatingActionButton(
-            heroTag: 'gallery',
-            onPressed: _choosePhoto,
-            child: Icon(Icons.photo_library),
-          ),
-
-          //spacer
-          SizedBox(height: 20,),
-
-          //submit clothes
-          FloatingActionButton.large(
-            heroTag: 'submit',
-            onPressed: _submitClothes,
-            child: Icon(Icons.add),
-          ),
-        ],
-      ),
+  Widget ButtonBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        FilledButton.tonalIcon(onPressed: _takePhoto, label: Text('Take Photo'), icon: Icon(Icons.photo_camera),),
+        if(_image != null) IconButton(onPressed: _removePhoto, icon: Icon(Icons.delete)), //OutlinedButton.icon(onPressed: _removePhoto, label: Text('Remove Image'), icon: Icon(Icons.delete)),
+        FilledButton.tonalIcon(onPressed: _choosePhoto, label: Text('Open Gallery'), icon: Icon(Icons.photo_library)),
+      ],
     );
   }
 }
