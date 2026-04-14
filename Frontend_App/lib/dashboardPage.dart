@@ -304,9 +304,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
           child: Column(
             spacing: 20.0,
             children: [
-              (_image != null)
-                ? Image.file(_image!, fit: BoxFit.fitHeight, height: 400.0) //TODO display image some way ot her than a force size (parallax would be cool)
-                : Text('No image selected'),
+              ImagePreviewContainer(image: _image,),
               Form(
                 key: _clothesFormKey,
                 child: Column(
@@ -421,6 +419,39 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ImagePreviewContainer extends StatelessWidget {
+  const ImagePreviewContainer({super.key, required this.image});
+
+  final File? image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 16),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(16),
+          child: Stack(
+            children: [
+              _buildBackground(context),
+              //_buildGradient(),
+              //_buildText(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackground(BuildContext context) {
+    String url = 'http://ec-albo.xyz:5000/images/default.jpg';
+    return Positioned.fill(
+      child: (image != null) ? Image.file(image!, fit: BoxFit.cover) : Image.network(url, fit: BoxFit.cover,)
     );
   }
 }
