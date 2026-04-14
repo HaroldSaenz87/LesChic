@@ -10,6 +10,20 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: FittedBox(child: Logo()),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: const Text('Log Out'),
+              onTap: () => doLogout(context),
+            ),
+          ],
+        ),
+      ),
       //bottomNavigationBar: DashboardNavBar(),
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -18,11 +32,6 @@ class DashboardPage extends StatelessWidget {
         minimum: const EdgeInsets.all(16),
         child: Column(
           children: [
-            //log out button
-            ElevatedButton(
-              onPressed: () => doLogout(context),
-              child: const Text('Log out'),
-            ),
         
             //add clothes button
             ElevatedButton(
