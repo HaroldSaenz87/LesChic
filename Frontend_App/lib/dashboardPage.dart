@@ -245,6 +245,12 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     super.dispose();
   }
 
+  void _removePhoto() {
+    setState(() {
+      _image = null;
+    });
+  }
+
   Future<void> _takePhoto() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera, maxHeight: MAX_IMAGE_DIMENSION, maxWidth: MAX_IMAGE_DIMENSION);
 
@@ -378,6 +384,15 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          //remove photo
+          FloatingActionButton(
+            heroTag: 'remove',
+            onPressed: _removePhoto,
+            child: Icon(Icons.delete),
+          ),
+
+          //spacer
+          SizedBox(height: 10,),
           //take new photo
           FloatingActionButton(
             heroTag: 'camera',
