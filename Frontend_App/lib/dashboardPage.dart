@@ -214,6 +214,39 @@ class ClothesListItem extends StatelessWidget {
   }
 }
 
+class DataDisplay extends StatefulWidget {
+  const DataDisplay({super.key});
+
+  @override
+  State<DataDisplay> createState() => _DataDisplayState();
+}
+
+class _DataDisplayState extends State<DataDisplay> {
+  StorageService storage = StorageService();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<UserData?>(
+      future: storage.getUserData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Text('UserData loading');
+        }
+        if(snapshot.data != null) {
+        }
+        return Column(
+          children: [
+            Text('uid: ${snapshot.data!.uid}'),
+            Text('name: ${snapshot.data!.name}'),
+            Text('email: ${snapshot.data!.email}'),
+            Text('token: ${snapshot.data!.token}'),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class AddClothesScreen extends StatefulWidget {
   const AddClothesScreen({super.key});
 
@@ -232,7 +265,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   final TextEditingController _typeController = TextEditingController();
   final TextEditingController _paletteController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
-  final TextEditingController _tagsController = TextEditingController();
+  //final TextEditingController _tagsController = TextEditingController();
 
   @override
   void dispose() {
@@ -241,7 +274,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     _typeController.dispose();
     _paletteController.dispose();
     _brandController.dispose();
-    _tagsController.dispose();
+    //_tagsController.dispose();
     super.dispose();
   }
 
@@ -289,7 +322,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
       if (result == 200 && mounted) { //adding was successful
         Navigator.pop(context, result);
       } else { //failed
-        showSnackBar(context, 'Error $result: failed to add item');
+        if(mounted) showSnackBar(context, 'Error $result: failed to add item');
       }
     }
   }
@@ -366,12 +399,15 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
                     ),
         
                     //tags field (optional)
-                    TextFormField(
-                      enabled: false,
-                      //controller: _tagsController,
-                      decoration: InputDecoration(labelText: 'Tags'),
-                      initialValue: 'Add tags later on the website!',
-                    ),
+                    // TextFormField(
+                    //   enabled: false,
+                    //   //controller: _tagsController,
+                    //   decoration: InputDecoration(labelText: 'Tags'),
+                    //   initialValue: 'Add tags later on the website!',
+                    // ),
+
+                    //tags instructions
+                    Text('Add tags later on the website!'),
                   ],
                 ),
               ),
