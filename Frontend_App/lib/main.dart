@@ -54,19 +54,22 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _loggedInFuture.then((value) {
-          if(value == true) {
-            Navigator.pushReplacementNamed(context, '/dashboard');
-          } else {
-            Navigator.pushReplacementNamed(context, '/login');
-          }
-        }), 
-        builder: (context, snapshot) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+      body: SafeArea(
+        minimum: const EdgeInsets.all(16.0),
+        child: FutureBuilder(
+          future: _loggedInFuture.then((value) {
+            if(value == true) {
+              Navigator.pushReplacementNamed(context, '/dashboard');
+            } else {
+              Navigator.pushReplacementNamed(context, '/login');
+            }
+          }), 
+          builder: (context, snapshot) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

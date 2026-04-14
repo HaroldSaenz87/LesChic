@@ -14,20 +14,23 @@ class DashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Column(
-        children: [
-          //log out button
-          ElevatedButton(
-            onPressed: () => doLogout(context),
-            child: const Text('Log out'),
-          ),
-
-          //add clothes button
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
-            child: const Text('Add clothes'),
-          ),
-        ],
+      body: SafeArea(
+        minimum: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            //log out button
+            ElevatedButton(
+              onPressed: () => doLogout(context),
+              child: const Text('Log out'),
+            ),
+        
+            //add clothes button
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, '/dashboard/addClothes'),
+              child: const Text('Add clothes'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -107,81 +110,84 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Clothing Item'),),
-      body: SingleChildScrollView(
-        child: Column(
-          spacing: 20.0,
-          children: [
-            (_image != null)
-              ? Image.file(_image!, fit: BoxFit.fitHeight, height: 400.0) //TODO display image some way ot her than a force size (parallax would be cool)
-              : Text('No image selected'),
-            Form(
-              key: _clothesFormKey,
-              child: Column(
-                spacing: 20.0,
-                children: [
-                  //title field
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(labelText: 'Title *'),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a title';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  //size field
-                  TextFormField(
-                    controller: _sizeController,
-                    decoration: InputDecoration(labelText: 'Size *'),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a size';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  //type field
-                  TextFormField(
-                    controller: _typeController,
-                    decoration: InputDecoration(labelText: 'Type *'),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a type';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  //palette field
-                  TextFormField(
-                    controller: _paletteController,
-                    decoration: InputDecoration(labelText: 'Palette *'),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a palette';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  //brand field (optional)
-                  TextFormField(
-                    controller: _brandController,
-                    decoration: InputDecoration(labelText: 'Brand'),
-                  ),
-
-                  //tags field (optional)
-                  TextFormField(
-                    controller: _tagsController,
-                    decoration: InputDecoration(labelText: 'Tags'),
-                  ),
-                ],
+      body: SafeArea(
+        minimum: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 20.0,
+            children: [
+              (_image != null)
+                ? Image.file(_image!, fit: BoxFit.fitHeight, height: 400.0) //TODO display image some way ot her than a force size (parallax would be cool)
+                : Text('No image selected'),
+              Form(
+                key: _clothesFormKey,
+                child: Column(
+                  spacing: 20.0,
+                  children: [
+                    //title field
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(labelText: 'Title *'),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a title';
+                        }
+                        return null;
+                      },
+                    ),
+        
+                    //size field
+                    TextFormField(
+                      controller: _sizeController,
+                      decoration: InputDecoration(labelText: 'Size *'),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a size';
+                        }
+                        return null;
+                      },
+                    ),
+        
+                    //type field
+                    TextFormField(
+                      controller: _typeController,
+                      decoration: InputDecoration(labelText: 'Type *'),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a type';
+                        }
+                        return null;
+                      },
+                    ),
+        
+                    //palette field
+                    TextFormField(
+                      controller: _paletteController,
+                      decoration: InputDecoration(labelText: 'Palette *'),
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a palette';
+                        }
+                        return null;
+                      },
+                    ),
+        
+                    //brand field (optional)
+                    TextFormField(
+                      controller: _brandController,
+                      decoration: InputDecoration(labelText: 'Brand'),
+                    ),
+        
+                    //tags field (optional)
+                    TextFormField(
+                      controller: _tagsController,
+                      decoration: InputDecoration(labelText: 'Tags'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(
