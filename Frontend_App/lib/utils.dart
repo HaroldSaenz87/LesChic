@@ -231,7 +231,7 @@ Future<int> doCreateClothes (String token, String title, String size, String typ
   //add provided fields
   request.fields['title'] = title;
   request.fields['size'] = size;
-  if (brand != null) request.fields['brand'] = brand;
+  if (brand != null && brand.isNotEmpty) request.fields['brand'] = brand;
   request.fields['type'] = type;
   request.fields['palette'] = palette;
   //if (tags != null) request.fields['tags'] = tags; //TODO figure out how to add tags
