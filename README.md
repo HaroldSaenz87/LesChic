@@ -16,7 +16,7 @@ A luxury full-stack closet management ecosystem featuring a high-end web experie
  
 | Name             | Role                                       |
 |------------------|--------------------------------------------|
-| Harold (me)      | Frontend Development (Web)                 |
+| Harold           | Frontend Development (Web)                 |
 | Rae              | Mobile Application Development (Flutter)   |
 | Nicholas         | Backend Development & API Design           |
 | Nia              | Database Architecture                      |
